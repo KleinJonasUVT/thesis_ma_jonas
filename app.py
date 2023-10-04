@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify
-from database import load_courses_from_db, load_course_from_db
+from database import load_courses_from_db, load_course_from_db, load_best_courses_from_db, load_carousel_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db
 
 app = Flask(__name__)
 
@@ -14,7 +14,12 @@ def landing():
 
 @app.route("/home")
 def home():
-    return render_template('home.html')
+    carousel_courses = load_carousel_courses_from_db()
+    num_carousel_courses = len(carousel_courses)
+    best_courses = load_best_courses_from_db()
+    explore_courses = load_explore_courses_from_db()
+    compulsory_courses = load_compulsory_courses_from_db()
+    return render_template('home.html', best_courses=best_courses, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, explore_courses=explore_courses, compulsory_courses=compulsory_courses)
 
 @app.route("/courses")
 def hello_world():
@@ -43,9 +48,9 @@ def show_course(course_code):
     return render_template('coursepage.html',
                         course=course)
 
-@app.route('/favorites')
+@app.route('/favourites')
 def favorite_courses():
-    return render_template('favorites.html')
+    return render_template('favourites.html')
 
 
 if __name__ == "__main__":

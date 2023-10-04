@@ -1,0 +1,37 @@
+<div class="container">
+    <div class="row">
+      <div id="carouselExampleCaptions" class="carousel slide col-12">
+        <div class="carousel-indicators">
+          {% for i in range(num_carousel_courses) %}
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
+          {% endfor %}
+        </div>
+        <div class="carousel-inner">
+          {% for carousel_course in carousel_courses %}
+          <div class="carousel-item {% if loop.first %}active{% endif %}">
+                  <div class="card">
+                    <div class="carousel-card-body">
+                      <h5 class="card-title"><b>{{ carousel_course['course_name'] }}</b></h5>
+                      <p class="course-details">
+                        Course code: {{ carousel_course['course_code'] }} <br>
+                        Language: {{ carousel_course['language'] }}
+                      </p>
+                        <div class="card custom-crd">
+                          <div class="card-body">
+                              <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+    {% endfor %}
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+            <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+            <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
+            <span class="visually-hidden">Next</span>
+          </button>
+      </div>
+    </div>

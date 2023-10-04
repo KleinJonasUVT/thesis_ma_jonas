@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Favorite Courses</title>
+    <title>Favourite Courses</title>
     {% include 'bootstrap.html' %}
     <style>
         body {
@@ -17,15 +17,7 @@
            margin-block: 20px;
         }
 
-        #TiU_logo {
-           margin-top: 20px;
-           margin-bottom: 20px;
-           width: 40%;
-           max-width: 100%;
-           height: auto;
-        }
-
-        .favorites-card {
+        .favourites-card {
         width: 940px; 
         height: 60px;
         background-color: #f9f9f9; 
@@ -38,7 +30,7 @@
         margin: 20px auto;
     }
 
-        .favorites-card h1 {
+        .favourites-card h1 {
         margin: 0;
         padding: 0;
         font-size: 1.5em;
@@ -65,6 +57,9 @@
         .mail-button:hover {
         background-color: #e0e0e0; 
 }
+      .container {
+        padding-top: 100px; 
+    }
 
         .row {
             display: flex;
@@ -101,14 +96,8 @@
     </style>
 </head>
 <body>
-<div id="banner">
-    <div class="row center-object">
-        <img class="img-fluid" id="TiU_logo" src="/static/TiU_logo.png" alt="TiU Logo">
-    </div>
-    <div class="favorites-card">
-        <h1>My favorites</h1> 
-    </div>
-</div>
+  {% include 'navbar.html' %}
+
 
 <div class="container">
     <!-- Four rows of cards, each row containing 4 cards -->
@@ -129,7 +118,9 @@
     </div>
     {% endfor %}
    <!-- Mail Button -->
-    <a href="mailto:?subject=My favorite subjects from Tilburg University" class="mail-button">Mail My Favorites</a>
+    <a href="mailto:?subject=My favourite subjects from Tilburg University" class="mail-button">Mail My Favorites</a>
 </div>
 </body>
+  {% include 'footer.html' %}
+
 </html>

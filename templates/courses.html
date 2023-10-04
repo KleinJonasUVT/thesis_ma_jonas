@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Tilburg University Course Catalogue</title>
+  <title>Courses</title>
   {% include 'bootstrap.html' %}
   <style>
     body {
@@ -23,6 +23,39 @@
     .custom-button {
       background-color: #006094;
       color: white;
+    }
+
+      .custom-crd {
+    background-color: #F2D398;
+    border: 2px solid #986B23;
+    color: black;
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0;             /* ensure no margin */
+    height: 40px;          /* ensure height fits content */
+    }
+    
+      .custom-crd .card-body {
+        padding: 0;            /* remove padding from the card body */
+        margin: 0;             /* ensure no margin */
+    }
+    
+      .custom-crd {
+        transition: all 0.3s ease;
+    }
+            
+      .custom-crd:hover {
+        box-shadow:
+          -7px -7px 20px 0px #fff9,
+          -4px -4px 5px 0px #fff9,
+          7px 7px 20px 0px #0002,
+          4px 4px 5px 0px #0001;
+          font-weight: bold;
+    }
+
+      i {
+        font-size: 18px;
+        margin-left: 10px;
     }
   </style>
 </head>

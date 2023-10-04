@@ -1,0 +1,25 @@
+<div class="section">
+  <div class="row">
+    <h3><b><span style="color: #ACBED8;">Explore </span>more courses!</b></h3>
+  </div>
+  <div class="row">
+    {% for explore_course in explore_courses %}
+      <div class="col-4">
+          <div class="card">
+              <div class="card-body">
+                  <h5 class="card-title"><b>{{ explore_course['course_name'] }}</b></h5>
+                  <p class="course-details">
+                    Course code: {{ explore_course['course_code'] }} <br>
+                    Language: {{ explore_course['language'] }}
+                  </p>
+                <div class="card custom-crd">
+                    <div class="card-body">
+                        <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
