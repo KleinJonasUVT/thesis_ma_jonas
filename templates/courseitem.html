@@ -1,17 +1,21 @@
-<a href="/course/{{course['course_code']}}" target="_blank" class="card">
-  <div class="card-body">
-    <div class="course-header">
-      <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
-      <div class="star-button">
-        {% include 'star.html' %}
-      </div>
-    </div>
-    <p class="course-details">
-      {% if course['content'] | length > 200 %}
-        {{ course['content'][:200] }}...
-      {% else %}
-        {{ course['content'] }}
-      {% endif %}
-    </p>
-  </div>
-</a>
+<form method="POST" action="/course/{{ course['course_code'] }}/clicked" id="courseForm">
+    <a href="#" class="card" onclick="document.getElementById('courseForm').submit(); return false;">
+        <div class="card-body">
+            <div class="course-header">
+                <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
+                <div class="star-button">
+                    {% include 'star.html' %}
+                </div>
+            </div>
+            <p class="course-details">
+                {% if course['content'] | length > 200 %}
+                    {{ course['content'][:200] }}...
+                {% else %}
+                    {{ course['content'] }}
+                {% endif %}
+            </p>
+            <input type="hidden" name="activity" value="clicked" />
+        </div>
+    </a>
+</form>
+

@@ -1,11 +1,10 @@
 from flask import Flask, render_template, jsonify, request, redirect, session, url_for
 from datetime import datetime, timedelta
 import secrets
-from database import load_courses_from_db, add_rating_to_db, remove_rating_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, load_favorite_courses_from_db
+from database import load_courses_from_db, add_rating_to_db, remove_rating_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, load_favorite_courses_from_db, add_click_to_db
 
 app = Flask(__name__)
 app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
-app.permanent_session_lifetime = timedelta(minutes=0.5)
 
 filters = {
     'Degree': ['Bachelor', 'Master', 'Pre-master'],
@@ -78,9 +77,16 @@ def rating_course(course_code):
 @app.route("/course/<course_code>/remove_rating", methods=['POST'])
 def remove_rating(course_code):
     data = request.form
-    remove_rating_from_db(course_code, data)
+    remove_rating_from_db(course_code)
     previous_page = request.referrer
     return redirect(previous_page)
+
+@app.route("/course/<course_code>/clicked", methods=['POST'])
+def clicked_course(course_code):
+    data = request.form
+    session_id = session.get('session_id')
+    add_click_to_db(session_id, course_code, data)
+    return redirect(url_for('show_course', course_code=course_code))
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0', debug=True)
