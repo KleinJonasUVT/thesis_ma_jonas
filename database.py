@@ -1,3 +1,4 @@
+from flask import session
 from sqlalchemy import create_engine
 from sqlalchemy import text
 import os
@@ -86,6 +87,16 @@ def remove_rating_from_db(course_code, data):
             text("UPDATE courses SET favorite = DEFAULT WHERE course_code = :course_code"),
             {"course_code": course_code}
         )
+
+def add_session_to_db(data):
+  session_id = session.get('session_id')
+  time = datetime.now()
+
+  with engine.connect() as conn:
+      conn.execute(
+          text("INSERT INTO sessions (ID, timestamp, activity) VALUES (:session_id, :time, :activity, :course_code)"),
+          {"session_id": session_id, "time": time, "activity": data['activity'], "course_code": course_code, }
+      )
 
 
 

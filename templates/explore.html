@@ -15,23 +15,7 @@
           <div class="row">
             {% for course in explore_courses[i:i+3] %}
             <div class="col-4">
-              <a href="/course/{{course['course_code']}}" target="_blank" class="card">
-                <div class="card-body">
-                  <div class="course-header">
-                    <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
-                    <div class="star-button">
-                      {% include 'star.html' %}
-                    </div>
-                  </div>
-                  <p class="course-details">
-                    {% if course['content'] | length > 200 %}
-                      {{ course['content'][:200] }}...
-                    {% else %}
-                      {{ course['content'] }}
-                    {% endif %}
-                  </p>
-                </div>
-              </a>
+              {% include 'courseitem.html' %}
             </div>
             {% endfor %}
           </div>

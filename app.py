@@ -1,7 +1,11 @@
-from flask import Flask, render_template, jsonify, request, redirect
+from flask import Flask, render_template, jsonify, request, redirect, session, url_for
+from datetime import datetime, timedelta
+import secrets
 from database import load_courses_from_db, add_rating_to_db, remove_rating_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, load_favorite_courses_from_db
 
 app = Flask(__name__)
+app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
+app.permanent_session_lifetime = timedelta(minutes=0.5)
 
 filters = {
     'Degree': ['Bachelor', 'Master', 'Pre-master'],
@@ -10,7 +14,9 @@ filters = {
 
 @app.route("/")
 def landing():
-    return render_template('welcome.html')
+    session['session_id'] = secrets.token_hex(16)
+    session_id = session.get('session_id')
+    return render_template('welcome.html', session_id=session_id)
 
 @app.route("/home")
 def home():
@@ -22,7 +28,8 @@ def home():
     num_explore_courses = len(explore_courses)
     compulsory_courses = load_compulsory_courses_from_db()
     num_compulsory_courses = len(compulsory_courses)
-    return render_template('home.html', best_courses=best_courses, num_best_courses=num_best_courses, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, explore_courses=explore_courses, num_explore_courses=num_explore_courses, compulsory_courses=compulsory_courses, num_compulsory_courses=num_compulsory_courses)
+    session_id = session.get('session_id')
+    return render_template('home.html', best_courses=best_courses, num_best_courses=num_best_courses, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, explore_courses=explore_courses, num_explore_courses=num_explore_courses, compulsory_courses=compulsory_courses, num_compulsory_courses=num_compulsory_courses, session_id=session_id)
 
 @app.route("/courses")
 def hello_world():

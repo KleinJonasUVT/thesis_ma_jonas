@@ -57,6 +57,107 @@
         font-size: 18px;
         margin-left: 10px;
     }
+    
+      body {
+        margin-top: 5px;
+      }
+
+      .container {
+        margin-top: 50px;
+      }
+
+      .section {
+        margin-top: 25px;
+        margin-bottom: 25px;
+      }
+
+      .custom-crd {
+        background-color: #F2D398;
+        border: 2px solid #986B23;
+        color: black;
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 0;             /* ensure no margin */
+        height: 40px;          /* ensure height fits content */
+      }
+
+      .custom-crd .card-body {
+        padding: 0;            /* remove padding from the card body */
+        margin: 0;             /* ensure no margin */
+      }
+
+      .custom-crd {
+        transition: all 0.3s ease;
+      }
+
+      .custom-crd:hover {
+        box-shadow:
+          -7px -7px 20px 0px #fff9,
+          -4px -4px 5px 0px #fff9,
+          7px 7px 20px 0px #0002,
+          4px 4px 5px 0px #0001;
+          font-weight: bold;
+      }
+
+        .card {
+          margin-bottom: 20px;
+        }
+
+         .card:hover {
+          border: 2px solid #986B23; /* Change the border color on hover */
+        }
+
+      i {
+              font-size: 18px;
+              margin-left: 10px;
+            }
+
+      p.course-details {
+        margin-top: 10px;  /* Adjust as per requirement */
+      }
+
+      .course-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .star-button {
+        margin-left: auto; /* This pushes the star button to the right */
+      }
+
+      .star input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+
+      .star {
+        display: block;
+        position: relative;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .star svg {
+        position: relative;
+        top: 0;
+        left: 0;
+        height: 30px;
+        width: 30px;
+        transition: all 0.3s;
+        fill: #666;
+      }
+
+      .star svg:hover {
+        transform: scale(1.1);
+      }
+
+      .star input:checked ~ svg {
+        fill: #ffeb49;
+      }
   </style>
 </head>
 <body>

@@ -153,21 +153,8 @@
     <p class="message">You have not favorited any courses yet.<br> Click on the stars of courses to add them to your favorites!</p>
     {% else %}
       {% for course in favorite_courses %}
-            <div class="col-12">
-              <a href="/course/{{course['course_code']}}" target="_blank" class="card">
-                <div class="card-body">
-                  <div class="course-header">
-                    <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>{% include 'star.html' %}
-                  </div>
-                    <p class="course-details">
-                      {% if course['content'] | length > 250 %}
-                        {{ course['content'][:250] }}...
-                      {% else %}
-                        {{ course['content'] }}
-                      {% endif %}
-                    </p>
-                </div>
-              </a>
+            <div class="col-4">
+              {% include 'courseitem.html' %}
             </div>
       {% endfor %}
     {% endif %}
