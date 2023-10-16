@@ -15,6 +15,7 @@
           <div class="row">
             {% for course in best_courses[i:i+3] %}
             <div class="col-4">
+              {% include 'star.html' %}
               {% include 'courseitem.html' %}
             </div>
             {% endfor %}
