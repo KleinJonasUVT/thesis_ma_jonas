@@ -9,6 +9,49 @@
     .container {
       margin: 50px;
     }
+
+    .star-button {
+      margin-left: auto; /* This pushes the star button to the right */
+    }
+
+    .star input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    .star {
+      display: block;
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .star svg {
+      position: relative;
+      top: 0;
+      left: 0;
+      height: 30px;
+      width: 30px;
+      transition: all 0.3s;
+      fill: #666;
+    }
+
+    .star svg:hover {
+      transform: scale(1.1);
+    }
+
+    .star input:checked ~ svg {
+      fill: #ffeb49;
+    }
+
+    .course-header {
+      display: flex;
+      justify-content: space-between; /* Align items to the left and right edges */
+      align-items: flex-start;
+    }
   </style>
   <title>Tilburg University Course Catalogue</title>
   {% include 'bootstrap.html' %}
@@ -17,8 +60,27 @@
   {% include 'navbar.html' %}
   <div class="container">
     <div class="row mt-4">
-      <div class="col">
+      <div class="course-header">
         <h2>{{ course['course_name'] }}</h2>
+        {% include 'star.html' %}
+      </div>
+      <div class="col-8">
+        <h5><b>Content</b></h5>
+        <p>{{ course['content'] }}</p>
+        <h5><b>Aims</b></h5>
+        <p>{{ course['aims'] }}</p>
+        <h5><b>Tests</b></h5>
+        <p>{{ course['tests'] }}</p>
+        <h5><b>Lecturers</b></h5>
+        <p>{{ course['lecturers'] }}</p>
+      </div>
+      <div class="col-4">
+        <p style="margin-top: 30px"><b>Course_code: </b>{{ course['course_code'] }} <br>
+        <b>Language: </b>{{ course['language'] }} <br>
+        <b>Degree: </b>{{ course['Degree'] }} <br>
+        <b>ECTS: </b>{{ course['ECTS'] }} <br>
+        <b>School: </b>{{ course['school'] }} <br>
+        <b>Block: </b>{{ course['block'] }}</p>
       </div>
     </div>
     

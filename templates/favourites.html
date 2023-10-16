@@ -28,8 +28,8 @@
         }
       
         .custom-crd .card-body {
-          padding: 0;            /* remove padding from the card body */
-          margin: 0;             /* ensure no margin */
+          padding: 0;
+          margin: 0;
         }
       
         .custom-crd {
@@ -72,7 +72,7 @@
         background-color: #e0e0e0; 
 }
       .card {
-        margin-bottom: 20px;
+        margin-bottom: 5px;
         margin-top: 20px;
       }
 
@@ -88,6 +88,53 @@
         color: #000000;
         cursor: pointer;
       }
+
+      .card:hover {
+        border: 3px solid #986B23; /* Change the border color on hover */
+    }
+    
+      .star input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+      }
+      
+      .star {
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        user-select: none;
+      }
+      
+      .star svg {
+        position: relative;
+        top: 0;
+        left: 0;
+        height: 30px;
+        width: 30px;
+        transition: all 0.3s;
+        fill: #666;
+      }
+      
+      .star svg:hover {
+        transform: scale(1.1);
+      }
+      
+      .star input:checked ~ svg {
+        fill: #ffeb49;
+      }
+
+      .course-header {
+        display: flex;
+        justify-content: space-between; /* Align items to the left and right edges */
+        align-items: flex-start;
+      }
+
+      .message {
+        margin-top: 20px;
+      }
     </style>
 </head>
 <body>
@@ -98,34 +145,33 @@
       <h3><b>Your <span style="color: #ACBED8;">Favourites!</span></b></h3>
     </div>
     <div class="col-6 right">
-      <i class="fa-solid fa-envelope fa-xl" title="E-mail favorits" style="color: #000000;"></i>
+      <a href="mailto:?subject=My favourite subjects from Tilburg University"><i class="fa-solid fa-envelope fa-xl" title="E-mail favorites" style="color: #000000;"></i></a>
     </div>
   </div>
   <div class="row">
-      {% for carousel_course in carousel_courses %}
-        <div class="col-4">
-            <div class="card">
+    {% if not favorite_courses %}
+    <p class="message">You have not favorited any courses yet.<br> Click on the stars of courses to add them to your favorites!</p>
+    {% else %}
+      {% for course in favorite_courses %}
+            <div class="col-12">
+              <a href="/course/{{course['course_code']}}" target="_blank" class="card">
                 <div class="card-body">
-                    <h5 class="card-title"><b>{{ carousel_course['course_name'] }}</b></h5>
-                      <p class="course-details">
-                        Course code: {{ carousel_course['course_code'] }} <br>
-                        Language: {{ carousel_course['language'] }}
-                      </p>
-                    <div class="card custom-crd">
-                      <div class="card-body">
-                          <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
-                      </div>
-                    </div>
+                  <div class="course-header">
+                    <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>{% include 'star.html' %}
+                  </div>
+                    <p class="course-details">
+                      {% if course['content'] | length > 250 %}
+                        {{ course['content'][:250] }}...
+                      {% else %}
+                        {{ course['content'] }}
+                      {% endif %}
+                    </p>
                 </div>
+              </a>
             </div>
-        </div>
       {% endfor %}
-    </div>
-</div>
-   <!-- Mail Button -->
-    <a href="mailto:?subject=My favourite subjects from Tilburg University" class="mail-button">Mail My Favourites</a>
-</div>
+    {% endif %}
+  </div>
 </body>
   {% include 'footer.html' %}
-
 </html>

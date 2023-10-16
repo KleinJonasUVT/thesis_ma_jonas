@@ -23,18 +23,6 @@ def load_courses_from_db():
       courses.append(result_dict)
     return courses
 
-def load_course_from_db(course_code):
-    with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE course_code = :val"), parameters=dict(val=course_code))
-        course = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            if len(row) == 0:
-                return None
-            else:
-                return result_dict
-
 def load_carousel_courses_from_db():
     with engine.connect() as conn:
         result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Carousel'"))
@@ -74,6 +62,30 @@ def load_compulsory_courses_from_db():
             result_dict = {column: value for column, value in zip(columns, row)}
             compulsory_courses.append(result_dict)
         return compulsory_courses
+
+def load_favorite_courses_from_db():
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT * FROM courses WHERE favorite = 1"))
+        favorite_courses = []
+        columns = result.keys()
+        for row in result:
+            result_dict = {column: value for column, value in zip(columns, row)}
+            favorite_courses.append(result_dict)
+        return favorite_courses
+
+def add_rating_to_db(course_code, data):
+    with engine.connect() as conn:
+            conn.execute(
+                text("UPDATE courses SET favorite = :rating WHERE course_code = :course_code"),
+                {"course_code": course_code, "rating": data['favorite']}
+            )
+
+def remove_rating_from_db(course_code, data):
+    with engine.connect() as conn:
+        conn.execute(
+            text("UPDATE courses SET favorite = DEFAULT WHERE course_code = :course_code"),
+            {"course_code": course_code}
+        )
 
 
 

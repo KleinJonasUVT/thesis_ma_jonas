@@ -1,25 +1,51 @@
 <div class="section">
   <div class="row">
-    <h3><b><span style="color: #ACBED8;">Explore </span>more courses!</b></h3>
+    <h3><b><span style="color: #ACBED8;">Explore</span> more courses!</b></h3>
   </div>
   <div class="row">
-    {% for explore_course in explore_courses %}
-      <div class="col-4">
-          <div class="card">
-              <div class="card-body">
-                  <h5 class="card-title"><b>{{ explore_course['course_name'] }}</b></h5>
-                  <p class="course-details">
-                    Course code: {{ explore_course['course_code'] }} <br>
-                    Language: {{ explore_course['language'] }}
-                  </p>
-                <div class="card custom-crd">
-                    <div class="card-body">
-                        <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
+    <div id="carousel_explore" class="carousel slide col-12">
+      <div class="carousel-indicators">
+        {% for i in range(num_explore_courses) %}
+        <button type="button" data-bs-target="#carousel_explore" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
+        {% endfor %}
+      </div>
+      <div class="carousel-inner">
+        {% for i in range(0, explore_courses|length, 3) %}
+        <div class="carousel-item{% if loop.first %} active{% endif %}">
+          <div class="row">
+            {% for course in explore_courses[i:i+3] %}
+            <div class="col-4">
+              <a href="/course/{{course['course_code']}}" target="_blank" class="card">
+                <div class="card-body">
+                  <div class="course-header">
+                    <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
+                    <div class="star-button">
+                      {% include 'star.html' %}
                     </div>
                   </div>
-              </div>
+                  <p class="course-details">
+                    {% if course['content'] | length > 200 %}
+                      {{ course['content'][:200] }}...
+                    {% else %}
+                      {{ course['content'] }}
+                    {% endif %}
+                  </p>
+                </div>
+              </a>
+            </div>
+            {% endfor %}
           </div>
+        </div>
+        {% endfor %}
       </div>
-    {% endfor %}
+      <button class="carousel-control-prev" type="button" data-bs-target="#carousel_explore" data-bs-slide="prev">
+        <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carousel_explore" data-bs-slide="next">
+        <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
   </div>
 </div>

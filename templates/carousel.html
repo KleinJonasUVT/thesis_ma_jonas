@@ -7,23 +7,26 @@
           {% endfor %}
         </div>
         <div class="carousel-inner">
-          {% for carousel_course in carousel_courses %}
+          {% for course in carousel_courses %}
           <div class="carousel-item {% if loop.first %}active{% endif %}">
-                  <div class="card">
-                    <div class="carousel-card-body">
-                      <h5 class="card-title"><b>{{ carousel_course['course_name'] }}</b></h5>
-                      <p class="course-details">
-                        Course code: {{ carousel_course['course_code'] }} <br>
-                        Language: {{ carousel_course['language'] }}
-                      </p>
-                        <div class="card custom-crd">
-                          <div class="card-body">
-                              <p>More info<i class="fa-solid fa-circle-chevron-right fa-sm" style="color: #000000;"></i></p>
-                          </div>
-                        </div>
+              <a href="/course/{{course['course_code']}}" target="_blank" class="card">
+                <div class="carousel-card-body">
+                  <div class="course-header">
+                    <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
+                    <div class="star-button">
+                      {% include 'star.html' %}
                     </div>
                   </div>
-              </div>
+                  <p class="course-details">
+                    {% if course['content'] | length > 500 %}
+                      {{ course['content'][:500] }}...
+                    {% else %}
+                      {{ course['content'] }}
+                    {% endif %}
+                  </p>
+                </div>
+              </a>
+          </div>
     {% endfor %}
           <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
             <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>

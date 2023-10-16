@@ -46,6 +46,14 @@
       font-weight: bold;
   }
 
+    .card {
+      margin-bottom: 20px;
+    }
+  
+     .card:hover {
+      border: 2px solid #986B23; /* Change the border color on hover */
+    }
+
   i {
           font-size: 18px;
           margin-left: 10px;
@@ -88,6 +96,49 @@
 
   p.course-details {
     margin-top: 10px;  /* Adjust as per requirement */
+  }
+
+  .course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .star-button {
+    margin-left: auto; /* This pushes the star button to the right */
+  }
+
+  .star input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  .star {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .star svg {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 30px;
+    width: 30px;
+    transition: all 0.3s;
+    fill: #666;
+  }
+  
+  .star svg:hover {
+    transform: scale(1.1);
+  }
+  
+  .star input:checked ~ svg {
+    fill: #ffeb49;
   }
 </style>
 <body>
