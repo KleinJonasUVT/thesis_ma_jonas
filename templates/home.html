@@ -6,11 +6,11 @@
 </head>
 <style>
   body {
-    margin-top: 5px;
+    margin-top: 60px;
   }
 
   .container {
-    margin-top: 50px;
+    margin-top: 20px;
   }
 
   .section {
@@ -147,10 +147,26 @@
     right: 20px; /* Adjust the right value to position the star horizontally */
     z-index: 1;
   }
+
+  p.introduction {
+    margin-top: 22px;
+  }
 </style>
-<body>
   {% include 'navbar.html' %}
-  {% include 'carousel.html' %}
+<body>
+  <div class="container">
+    <div class="row">
+      <h1><b>Craft your learning journey: courses curated <span style="color: #ACBED8;">just for you!</span></b></h1>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p class="introduction">Welcome to <b><span style="color: #986B23;">Tilburg University's</span></b> course catalogue! This directory is your guide to our diverse academic offerings. As you embark on your <b><span style="color: #986B23;">academic journey</span></b> with us, utilize this catalogue to make informed choices that align with your educational and career aspirations.</p>
+      </div>
+      <div class="col">
+        {% include 'carousel.html' %}
+      </div>
+    </div>
+  </div>
   {% include 'best.html' %}
   {% include 'explore.html' %}
   {% include 'compulsory.html' %}

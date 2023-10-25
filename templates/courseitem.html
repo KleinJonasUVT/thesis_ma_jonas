@@ -5,8 +5,8 @@
                 <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
             </div>
             <p class="course-details">
-                {% if course['content'] | length > 200 %}
-                    {{ course['content'][:200] }}...
+                {% if course['content'] | length > 250 %}
+                    {{ course['content'][:250] }}...
                 {% else %}
                     {{ course['content'] }}
                 {% endif %}

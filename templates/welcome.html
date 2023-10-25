@@ -25,6 +25,13 @@
            height: auto;
         }
 
+      #TiU_photo {
+        width: auto;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
         .card {
           text-align: center;
           border: 2px solid #986B23;
@@ -37,6 +44,7 @@
           border: 2px solid #986B23;
           color: black;
           width: 100%;
+          margin-top: 25px;
         }
 
         .custom-btn {
@@ -48,11 +56,11 @@
   
         p {
           font-size: 18px;
-          margin-top: 50px;
+          margin-top: 20px;
         }
 
         i {
-          font-size: 18px;
+          font-size: 15px;
           margin-block: 20px;
           margin-right: 10px;
         }
@@ -73,11 +81,11 @@
           margin-block: 10px;
         }
         
-        .btn-1 {
+        .custom-crd {
             transition: all 0.3s ease;
         }
         
-        .btn-1:hover {
+        .custom-crd:hover {
             box-shadow:
             -7px -7px 20px 0px #fff9,
             -4px -4px 5px 0px #fff9,
@@ -88,6 +96,9 @@
 
         .btn-container {
           display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          position: relative;
         }
 
         .custom-btn.btn-1:first-child {
@@ -99,6 +110,16 @@
           color: inherit;
           outline: none;
         }
+
+      .course-text {
+        font-weight: bold;
+        font-size: 24px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1; 
+      }
     </style>
 </head>
 <body>
@@ -114,30 +135,22 @@
         <div class="col">
             <h1><b>Craft your learning journey: courses curated <span style="color: #ACBED8;">just for you!</span></b></h1>
             <p>Welcome to <b><span style="color: #986B23;">Tilburg University's</span></b> course catalogue! This directory is your guide to our diverse academic offerings. As you embark on your <b><span style="color: #986B23;">academic journey</span></b> with us, utilize this catalogue to make informed choices that align with your educational and career aspirations.</p>
+          <div class="card custom-crd">
+              <div class="card-body">
+                <a href="/home" target="_blank">
+                  <div class="btn-container">
+                    <span class="course-text">Show me the courses!</span>
+                    <i class="fa-solid fa-arrow-right fa-2xl" style="color: #000000;"></i>
+                  </div>
+                </a>
+              </div>
+          </div>
         </div>
         
         <!-- Right Column -->
         <div class="col">
-          <div class="card custom-crd">
-              <div class="card-body">
-                  <h5><b>Are you already a student of Tilburg University?</b></h5>
-              </div>
-          </div>
-          <div class="btn-container">
-              <button class="custom-btn btn-1">
-                <a href="/inlogpage" target="_blank">
-                  <i class="fa-solid fa-check fa-xl" style="color: #006094;"></i> Yes, I am already a student
-                </a>
-              </button>
-              <button class="custom-btn btn-1">
-                <a href="/home" target="_blank">
-                  <i class="fa-solid fa-xmark fa-xl" style="color: #006094;"></i> No, I am not (yet) a student
-                </a>
-              </button>
-          </div>
-        </div>
-
-      
+          <img class="img-fluid" id="TiU_photo" src="/static/TiU_photo.jpeg">
+        </div> 
     </div>
 </div>
 </body>

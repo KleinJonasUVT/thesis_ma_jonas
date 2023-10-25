@@ -7,28 +7,28 @@ app = Flask(__name__)
 app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
 
 filters = {
-    'Degree': ['Bachelor', 'Master', 'Pre-master'],
-    'Block': [1, 2, 3, 4]
+  'Degree': ['Bachelor', 'Master', 'Pre-master'],
+  'Block': [1, 2, 3, 4]
 }
 
 @app.route("/")
 def landing():
     session['session_id'] = secrets.token_hex(16)
     session_id = session.get('session_id')
-    return render_template('welcome.html', session_id=session_id)
+    return render_template('welcome.html')
 
 @app.route("/home")
 def home():
-    carousel_courses = load_carousel_courses_from_db()
-    num_carousel_courses = len(carousel_courses)
-    best_courses = load_best_courses_from_db()
-    num_best_courses = len(best_courses)
-    explore_courses = load_explore_courses_from_db()
-    num_explore_courses = len(explore_courses)
-    compulsory_courses = load_compulsory_courses_from_db()
-    num_compulsory_courses = len(compulsory_courses)
-    session_id = session.get('session_id')
-    return render_template('home.html', best_courses=best_courses, num_best_courses=num_best_courses, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, explore_courses=explore_courses, num_explore_courses=num_explore_courses, compulsory_courses=compulsory_courses, num_compulsory_courses=num_compulsory_courses, session_id=session_id)
+  session_id = session.get('session_id')
+  carousel_courses = load_carousel_courses_from_db()
+  num_carousel_courses = len(carousel_courses)
+  best_courses = load_best_courses_from_db()
+  num_best_courses = len(best_courses)
+  explore_courses = load_explore_courses_from_db()
+  num_explore_courses = len(explore_courses)
+  compulsory_courses = load_compulsory_courses_from_db()
+  num_compulsory_courses = len(compulsory_courses)
+  return render_template('home.html', best_courses=best_courses, num_best_courses=num_best_courses, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, explore_courses=explore_courses, num_explore_courses=num_explore_courses, compulsory_courses=compulsory_courses, num_compulsory_courses=num_compulsory_courses, session_id=session_id)
 
 @app.route("/courses")
 def hello_world():
@@ -69,15 +69,19 @@ def get_interests():
 
 @app.route("/course/<course_code>/rating", methods=['POST'])
 def rating_course(course_code):
-    data = request.form
-    add_rating_to_db(course_code, data)
-    previous_page = request.referrer
-    return redirect(previous_page)
+  data = request.form
+  add_rating_to_db(course_code, data)
+  session_id = session.get('session_id')
+  add_click_to_db(session_id, course_code, data)
+  previous_page = request.referrer
+  return redirect(previous_page)
 
 @app.route("/course/<course_code>/remove_rating", methods=['POST'])
 def remove_rating(course_code):
     data = request.form
     remove_rating_from_db(course_code)
+    session_id = session.get('session_id')
+    add_click_to_db(session_id, course_code, data)
     previous_page = request.referrer
     return redirect(previous_page)
 

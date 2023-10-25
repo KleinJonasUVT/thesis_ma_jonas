@@ -1,40 +1,38 @@
-<div class="container">
-    <div class="row">
-      <div id="carouselExampleCaptions" class="carousel slide col-12">
-        <div class="carousel-indicators">
-          {% for i in range(num_carousel_courses) %}
-          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
-          {% endfor %}
-        </div>
-        <div class="carousel-inner">
-          {% for course in carousel_courses %}
-          <div class="carousel-item {% if loop.first %}active{% endif %}">
-              <a href="/course/{{course['course_code']}}" target="_blank" class="card">
-                <div class="carousel-card-body">
-                  <div class="course-header">
-                    <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
-                    <div class="star-button">
-                      {% include 'star.html' %}
-                    </div>
-                  </div>
-                  <p class="course-details">
-                    {% if course['content'] | length > 500 %}
-                      {{ course['content'][:500] }}...
-                    {% else %}
-                      {{ course['content'] }}
-                    {% endif %}
-                  </p>
-                </div>
-              </a>
-          </div>
+<div id="carouselExampleCaptions" class="carousel slide col-12">
+  <div class="carousel-indicators">
+    {% for i in range(num_carousel_courses) %}
+      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
     {% endfor %}
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-            <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-            <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
-            <span class="visually-hidden">Next</span>
-          </button>
+  </div>
+  <div class="carousel-inner">
+    {% for course in carousel_courses %}
+      <div class="carousel-item {% if loop.first %}active{% endif %}">
+        <a href="/course/{{course['course_code']}}" class="card">
+          <div class="carousel-card-body">
+            <div class="course-header">
+              <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
+              <div class="star-button">
+                {% include 'star.html' %}
+              </div>
+            </div>
+              <p class="course-details">
+                {% if course['content'] | length > 250 %}
+                  {{ course['content'][:250] }}...
+                {% else %}
+                  {{ course['content'] }}
+                {% endif %}
+              </p>
+          </div>
+        </a>
       </div>
-    </div>
+    {% endfor %}
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+      <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+      <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
+        <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
