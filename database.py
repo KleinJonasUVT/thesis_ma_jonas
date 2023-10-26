@@ -4,6 +4,7 @@ from sqlalchemy import text
 import os
 from datetime import datetime, timedelta
 import secrets
+import pytz
 
 db_connection_string = os.environ['DB_CONNECTION_STRING']
 
@@ -18,7 +19,7 @@ engine = create_engine(
 
 def load_courses_from_db():
   with engine.connect() as conn:
-    result = conn.execute(text("SELECT * FROM courses"))
+    result = conn.execute(text("SELECT * FROM course_info"))
     courses = []
     columns = result.keys()
     for row in result:
@@ -28,7 +29,7 @@ def load_courses_from_db():
 
 def load_carousel_courses_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Carousel'"))
+        result = conn.execute(text("SELECT * FROM course_info WHERE site_placement = 'Carousel'"))
         carousel_courses = []
         columns = result.keys()
         for row in result:
@@ -38,7 +39,7 @@ def load_carousel_courses_from_db():
 
 def load_best_courses_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Best'"))
+        result = conn.execute(text("SELECT * FROM course_info WHERE site_placement = 'Best'"))
         best_courses = []
         columns = result.keys()
         for row in result:
@@ -48,7 +49,7 @@ def load_best_courses_from_db():
 
 def load_explore_courses_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Explore'"))
+        result = conn.execute(text("SELECT * FROM course_info WHERE site_placement = 'Explore'"))
         explore_courses = []
         columns = result.keys()
         for row in result:
@@ -58,7 +59,7 @@ def load_explore_courses_from_db():
 
 def load_compulsory_courses_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Compulsory'"))
+        result = conn.execute(text("SELECT * FROM course_info WHERE site_placement = 'Compulsory'"))
         compulsory_courses = []
         columns = result.keys()
         for row in result:
@@ -67,31 +68,38 @@ def load_compulsory_courses_from_db():
         return compulsory_courses
 
 def load_favorite_courses_from_db():
-    with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE favorite = 'favorited'"))
-        favorite_courses = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            favorite_courses.append(result_dict)
-        return favorite_courses
-
-def add_rating_to_db(course_code, data):
-    with engine.connect() as conn:
-            conn.execute(
-                text("UPDATE courses SET favorite = :rating WHERE course_code = :course_code"),
-                {"course_code": course_code, "rating": data['activity']}
+  session_id = session.get('session_id')
+  
+  with engine.connect() as conn:
+    query = text("""
+        SELECT ci.*
+        FROM course_info ci
+        INNER JOIN (
+            SELECT s.course_code, s.ID
+            FROM sessions s
+            WHERE s.ID = :session_id
+            AND s.activity = 'favorited'
+            AND s.timestamp = (
+                SELECT MAX(timestamp)
+                FROM sessions
+                WHERE ID = s.ID AND course_code = s.course_code
             )
+        ) latest_session
+        ON ci.course_code = latest_session.course_code;
+    """)
 
-def remove_rating_from_db(course_code):
-    with engine.connect() as conn:
-        conn.execute(
-            text("UPDATE courses SET favorite = DEFAULT WHERE course_code = :course_code"),
-            {"course_code": course_code}
-        )
+    result = conn.execute(query, {"session_id":session_id})
+
+    favorite_courses = []
+    columns = result.keys()
+    for row in result:
+        result_dict = {column: value for column, value in zip(columns, row)}
+        favorite_courses.append(result_dict)
+      
+  return favorite_courses
 
 def add_click_to_db(session_id, course_code, data):
-  time = datetime.now()
+  time = datetime.now(pytz.timezone('Europe/Amsterdam'))
 
   with engine.connect() as conn:
       conn.execute(
