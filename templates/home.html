@@ -167,7 +167,12 @@
       </div>
     </div>
   </div>
-  {% include 'best.html' %}
+  {% if compulsory_courses %}
+    {% include 'compulsory.html' %}
+  {% endif %}
+  {% if next_courses %}
+    {% include 'best.html' %}
+  {% endif %}
   {% include 'explore.html' %}
 </body>
 {% include 'footer.html' %}

@@ -49,7 +49,7 @@ def load_best_courses_from_db():
 
 def load_explore_courses_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM course_info WHERE site_placement = 'Explore'"))
+        result = conn.execute(text("SELECT * FROM course_info ORDER BY RAND() LIMIT 9;"))
         explore_courses = []
         columns = result.keys()
         for row in result:
@@ -59,7 +59,24 @@ def load_explore_courses_from_db():
 
 def load_compulsory_courses_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM course_info WHERE site_placement = 'Compulsory'"))
+        session_id = session.get('session_id')
+
+        result = conn.execute(text("""
+          SELECT ci.*
+          FROM course_info ci
+          INNER JOIN (
+               SELECT s.course_code, s.ID
+               FROM sessions s
+               WHERE s.ID = :session_id
+               AND s.activity = 'clicked'
+               AND s.timestamp = (
+                   SELECT MAX(timestamp)
+                   FROM sessions
+                   WHERE ID = s.ID AND course_code = s.course_code
+               )
+           ) latest_session
+           ON ci.course_code = latest_session.course_code;
+           """), {"session_id":session_id})
         compulsory_courses = []
         columns = result.keys()
         for row in result:
