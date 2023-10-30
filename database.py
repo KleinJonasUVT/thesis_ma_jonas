@@ -49,7 +49,7 @@ def load_best_courses_from_db():
 
 def load_explore_courses_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM course_info ORDER BY RAND() LIMIT 9;"))
+        result = conn.execute(text("SELECT * FROM course_info WHERE site_placement = 'Best';"))
         explore_courses = []
         columns = result.keys()
         for row in result:
@@ -68,7 +68,6 @@ def load_compulsory_courses_from_db():
                SELECT s.course_code, s.ID
                FROM sessions s
                WHERE s.ID = :session_id
-               AND s.activity = 'clicked'
                AND s.timestamp = (
                    SELECT MAX(timestamp)
                    FROM sessions
@@ -89,20 +88,19 @@ def load_favorite_courses_from_db():
   
   with engine.connect() as conn:
     query = text("""
-        SELECT ci.*
-        FROM course_info ci
-        INNER JOIN (
-            SELECT s.course_code, s.ID
-            FROM sessions s
-            WHERE s.ID = :session_id
-            AND s.activity = 'favorited'
-            AND s.timestamp = (
-                SELECT MAX(timestamp)
-                FROM sessions
-                WHERE ID = s.ID AND course_code = s.course_code
-            )
-        ) latest_session
-        ON ci.course_code = latest_session.course_code;
+      SELECT ci.*
+      FROM course_info ci
+      JOIN (
+          SELECT course_code,
+              MAX(CASE WHEN activity = 'favorited' THEN timestamp END) AS favorited_time,
+              MAX(CASE WHEN activity = 'unfavorited' THEN timestamp END) AS unfavorited_time
+          FROM sessions
+          WHERE ID = :session_id
+          GROUP BY course_code
+          HAVING COALESCE(favorited_time, '1900-01-01 00:00:00') > COALESCE(unfavorited_time, '1900-01-01 00:00:00')
+          OR MAX(activity) = 'favorited'
+      ) s
+      ON ci.course_code = s.course_code;
     """)
 
     result = conn.execute(query, {"session_id":session_id})

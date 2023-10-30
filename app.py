@@ -54,13 +54,13 @@ def list_courses():
 
 @app.route("/course/<course_code>")
 def show_course(course_code):
-  courses = load_courses_from_db()
-  course = [course for course in courses if course.get('course_code') == course_code]
-  if not course:
-    return "Not Found", 404
-  else:
-    return render_template('coursepage.html',
-                        course=course[0])
+    courses = load_courses_from_db()
+    course = [course for course in courses if course.get('course_code') == course_code]
+    favorite_courses = load_favorite_courses_from_db()
+    if not course:
+        return "Not Found", 404
+    else:
+        return render_template('coursepage.html', course=course[0], favorite_courses=favorite_courses)
 
 @app.route('/favourites')
 def favorite_courses():
