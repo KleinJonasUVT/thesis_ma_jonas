@@ -110,7 +110,7 @@ def predict_next_course_from_db():
       
         with engine.connect() as conn:
             result = conn.execute(
-                text("SELECT * FROM course_info WHERE course_code IN :next_courses"),
+                text("SELECT * FROM courses WHERE course_code IN :next_courses"),
                 {"next_courses": tuple(next_courses)}
             )
 

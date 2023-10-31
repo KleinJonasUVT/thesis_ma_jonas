@@ -19,7 +19,7 @@ engine = create_engine(
 
 def load_courses_from_db():
   with engine.connect() as conn:
-    result = conn.execute(text("SELECT * FROM course_info"))
+    result = conn.execute(text("SELECT * FROM courses"))
     courses = []
     columns = result.keys()
     for row in result:
@@ -29,7 +29,7 @@ def load_courses_from_db():
 
 def load_carousel_courses_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM course_info WHERE site_placement = 'Carousel'"))
+        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Carousel'"))
         carousel_courses = []
         columns = result.keys()
         for row in result:
@@ -39,7 +39,7 @@ def load_carousel_courses_from_db():
 
 def load_best_courses_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM course_info WHERE site_placement = 'Best'"))
+        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Best'"))
         best_courses = []
         columns = result.keys()
         for row in result:
@@ -49,7 +49,7 @@ def load_best_courses_from_db():
 
 def load_explore_courses_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM course_info WHERE site_placement = 'Best';"))
+        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Best';"))
         explore_courses = []
         columns = result.keys()
         for row in result:
@@ -63,7 +63,7 @@ def load_compulsory_courses_from_db():
 
         result = conn.execute(text("""
           SELECT ci.*
-          FROM course_info ci
+          FROM courses ci
           INNER JOIN (
                SELECT s.course_code, s.ID
                FROM sessions s
@@ -89,7 +89,7 @@ def load_favorite_courses_from_db():
   with engine.connect() as conn:
     query = text("""
       SELECT ci.*
-      FROM course_info ci
+      FROM courses ci
       JOIN (
           SELECT course_code,
               MAX(CASE WHEN activity = 'favorited' THEN timestamp END) AS favorited_time,
