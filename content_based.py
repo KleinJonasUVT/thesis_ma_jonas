@@ -5,6 +5,7 @@ import os
 from flask import session
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+from database import load_courses_from_db
 
 # Database connection setup
 db_connection_string = os.environ['DB_CONNECTION_STRING']
@@ -17,16 +18,6 @@ engine = create_engine(
         }
     }
 )
-
-def load_courses_from_db():
-    with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses"))
-        courses = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            courses.append(result_dict)
-        return courses
 
 courses_dict = load_courses_from_db()
 courses_df = pd.DataFrame(courses_dict)
