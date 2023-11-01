@@ -72,10 +72,10 @@
                     <a class="custom-text" href="/favourites"><i class="fa-solid fa-star" style="color: #000000;"></i><b>Favourites</b></a>
                 </li>
             </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-primary custom-btn" type="submit">Search</button>
-            </form>
+              <form class="d-flex" role="search" action="/search" method="GET">
+                  <input class="form-control me-2" type="text" name="query" placeholder="Search courses" required autocomplete="off">
+                  <button class="btn btn-primary custom-btn" type="submit">Search</button>
+              </form>
             <ul class="navbar-nav">
                 <li class="nav-item">
                   <a class="custom-text" href="/"><i class="fa-solid fa-circle-user fa-2xl" style="color: #000000;"></i></a>

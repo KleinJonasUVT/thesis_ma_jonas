@@ -122,6 +122,19 @@ def add_click_to_db(session_id, course_code, data):
           {"session_id": session_id, "time": time, "course_code": course_code, "activity": data['activity']}
       )
 
+def search_courses_from_db(query):
+  with engine.connect() as conn:
+      result = conn.execute(
+          text("SELECT * FROM courses WHERE course_name LIKE :query OR course_code LIKE :query OR aims LIKE :query OR content LIKE :query"),
+          {"query": "%" + query + "%"}
+      )
+      courses = []
+      columns = result.keys()
+      for row in result:
+          result_dict = {column: value for column, value in zip(columns, row)}
+          courses.append(result_dict)
+      return courses
+
 
 
 

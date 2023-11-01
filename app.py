@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request, redirect, session, url_for
 from datetime import datetime, timedelta
 import secrets
-from database import load_courses_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, load_favorite_courses_from_db, add_click_to_db
+from database import load_courses_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, load_favorite_courses_from_db, add_click_to_db, search_courses_from_db
 from recommendations import predict_next_course_from_db
 from content_based import formula_content_based_courses
 
@@ -96,6 +96,18 @@ def clicked_course(course_code):
     session_id = session.get('session_id')
     add_click_to_db(session_id, course_code, data)
     return redirect(url_for('show_course', course_code=course_code))
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    query = request.args.get('query')  # Retrieve the query parameter from the URL
+
+    if query:
+        results = search_courses_from_db(query)
+    else:
+        results = []  # Initialize an empty list for the initial render
+
+    return render_template('search.html', query=query, results=results)
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0', debug=True)
