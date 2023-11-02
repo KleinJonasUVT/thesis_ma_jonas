@@ -27,15 +27,19 @@ def load_courses_from_db():
       courses.append(result_dict)
     return courses
 
-def load_carousel_courses_from_db():
+def load_random_courses_from_db():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Carousel'"))
-        carousel_courses = []
+        result = conn.execute(text("""
+          SELECT * FROM courses
+          ORDER BY RAND()
+          LIMIT 9;
+        """))
+        random_courses = []
         columns = result.keys()
         for row in result:
             result_dict = {column: value for column, value in zip(columns, row)}
-            carousel_courses.append(result_dict)
-        return carousel_courses
+            random_courses.append(result_dict)
+        return random_courses
 
 def load_best_courses_from_db():
     with engine.connect() as conn:
@@ -57,7 +61,7 @@ def load_explore_courses_from_db():
             explore_courses.append(result_dict)
         return explore_courses
 
-def load_compulsory_courses_from_db():
+def load_last_viewed_courses_from_db():
     with engine.connect() as conn:
         session_id = session.get('session_id')
 

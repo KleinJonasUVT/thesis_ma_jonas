@@ -163,29 +163,12 @@
 <body>
   {% include 'navbar.html' %}
   <div class="container">
-    <!-- Filter part -->
-    <div class="row">
-      <div class="col-2">
-        <aside>
-          <h5>Filters</h5>
-          <br>
-          {% for key in filters.keys() %}
-            {% include 'filter.html' %}
-          {% endfor %}
-        </aside>
-      </div>
-      
-      <!-- Courses part -->
-      <div class="col-10">
-        <main>
-          <h2>Courses</h2>
-          <div>
-            {% for course in courses %}
-              {% include 'courseitem.html' %}
-            {% endfor %}
-          </div>
-        </main>
-      </div>
+    <h2 style="margin-bottom: 25px;">All Courses</h2>
+    <div>
+      {% for course in sorted_courses %}
+        {% include 'star.html' %}
+        {% include 'courseitem.html' %}
+      {% endfor %}
     </div>
   </div>
 </body>

@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="row">
+    <div id="carousel_content_based" class="carousel slide col-12">
+      <div class="carousel-indicators">
+        {% for i in range(num_content_based_courses) %}
+        <button type="button" data-bs-target="#carousel_content_based" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
+        {% endfor %}
+      </div>
+      <div class="carousel-inner">
+        {% for i in range(0, content_based_courses|length, 3) %}
+        <div class="carousel-item{% if loop.first %} active{% endif %}">
+          <div class="row">
+            {% for course in content_based_courses[i:i+3] %}
+            <div class="col-4">
+              {% include 'star.html' %}
+              {% include 'courseitem.html' %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carousel_content_based" data-bs-slide="prev">
+        <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carousel_content_based" data-bs-slide="next">
+        <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</div>

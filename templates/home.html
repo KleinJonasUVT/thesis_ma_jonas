@@ -163,17 +163,23 @@
         <p class="introduction">Welcome to <b><span style="color: #986B23;">Tilburg University's</span></b> course catalogue! This directory is your guide to our diverse academic offerings. As you embark on your <b><span style="color: #986B23;">academic journey</span></b> with us, utilize this catalogue to make informed choices that align with your educational and career aspirations.</p>
       </div>
       <div class="col">
-        {% if content_based_courses %}
-          {% include 'carousel.html' %}
-        {% endif %}
+          {% include 'random.html' %}
       </div>
     </div>
   </div>
-  {% if compulsory_courses %}
-    {% include 'compulsory.html' %}
-  {% endif %}
+  <div class="container">
+    <div class="row">
+      <h3><b>Best courses <span style="color: #ACBED8;">for you!</span></b></h3>
+    </div>
+  </div>
   {% if next_courses %}
-    {% include 'best.html' %}
+    {% include 'sequence.html' %}
+  {% endif %}
+  {% if content_based_courses %}
+    {% include 'content_based.html' %}
+  {% endif %}
+  {% if last_viewed_courses %}
+    {% include 'last_viewed.html' %}
   {% endif %}
   {% include 'explore.html' %}
 </body>

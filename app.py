@@ -1,17 +1,12 @@
 from flask import Flask, render_template, jsonify, request, redirect, session, url_for
 from datetime import datetime, timedelta
 import secrets
-from database import load_courses_from_db, load_carousel_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_compulsory_courses_from_db, load_favorite_courses_from_db, add_click_to_db, search_courses_from_db
+from database import load_courses_from_db, load_random_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_last_viewed_courses_from_db, load_favorite_courses_from_db, add_click_to_db, search_courses_from_db
 from recommendations import predict_next_course_from_db
 from content_based import formula_content_based_courses
 
 app = Flask(__name__)
 app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
-
-filters = {
-  'Degree': ['Bachelor', 'Master', 'Pre-master'],
-  'Block': [1, 2, 3, 4]
-}
 
 @app.route("/")
 def landing():
@@ -22,25 +17,26 @@ def landing():
 @app.route("/home")
 def home():
   session_id = session.get('session_id')
-  carousel_courses = load_carousel_courses_from_db()
-  num_carousel_courses = len(carousel_courses)
+  random_courses = load_random_courses_from_db()
+  num_random_courses = len(random_courses)
   best_courses = load_best_courses_from_db()
   num_best_courses = len(best_courses)
   explore_courses = load_explore_courses_from_db()
   num_explore_courses = len(explore_courses)
-  compulsory_courses = load_compulsory_courses_from_db()
-  num_compulsory_courses = len(compulsory_courses)
+  last_viewed_courses = load_last_viewed_courses_from_db()
+  num_last_viewed_courses = len(last_viewed_courses)
   favorite_courses = load_favorite_courses_from_db()
   next_courses = predict_next_course_from_db()
   num_next_courses = len(next_courses)
   content_based_courses = formula_content_based_courses()
   num_content_based_courses = len(content_based_courses)
-  return render_template('home.html', best_courses=best_courses, num_best_courses=num_best_courses, carousel_courses=carousel_courses, num_carousel_courses=num_carousel_courses, explore_courses=explore_courses, num_explore_courses=num_explore_courses, compulsory_courses=compulsory_courses, num_compulsory_courses=num_compulsory_courses, session_id=session_id, favorite_courses=favorite_courses, next_courses=next_courses, num_next_courses=num_next_courses, content_based_courses=content_based_courses, num_content_based_courses=num_content_based_courses)
+  return render_template('home.html', random_courses=random_courses, num_random_courses=num_random_courses, explore_courses=explore_courses, num_explore_courses=num_explore_courses, last_viewed_courses=last_viewed_courses, num_last_viewed_courses=num_last_viewed_courses, session_id=session_id, favorite_courses=favorite_courses, next_courses=next_courses, num_next_courses=num_next_courses, content_based_courses=content_based_courses, num_content_based_courses=num_content_based_courses)
 
 @app.route("/courses")
 def hello_world():
     courses = load_courses_from_db()
-    return render_template('courses.html', courses=courses, filters=filters)
+    sorted_courses = sorted(courses, key=lambda x: x['course_name'])
+    return render_template('courses.html', sorted_courses=sorted_courses)
 
 @app.route("/inlogpage")
 def load_inlogpage():

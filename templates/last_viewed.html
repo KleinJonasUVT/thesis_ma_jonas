@@ -5,15 +5,15 @@
   <div class="row">
     <div id="carousel_compulsory" class="carousel slide col-12">
       <div class="carousel-indicators">
-        {% for i in range(num_compulsory_courses) %}
+        {% for i in range(num_last_viewed_courses) %}
         <button type="button" data-bs-target="#carousel_compulsory" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
         {% endfor %}
       </div>
       <div class="carousel-inner">
-        {% for i in range(0, compulsory_courses|length, 3) %}
+        {% for i in range(0, last_viewed_courses|length, 3) %}
         <div class="carousel-item{% if loop.first %} active{% endif %}">
           <div class="row">
-            {% for course in compulsory_courses[i:i+3] %}
+            {% for course in last_viewed_courses[i:i+3] %}
             <div class="col-4">
               {% include 'star.html' %}
               {% include 'courseitem.html' %}

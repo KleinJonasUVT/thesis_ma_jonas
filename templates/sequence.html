@@ -1,12 +1,9 @@
 <div class="container">
   <div class="row">
-    <h3><b>Best courses <span style="color: #ACBED8;">for you!</span></b></h3>
-  </div>
-  <div class="row">
-    <div id="carousel_best" class="carousel slide col-12">
+    <div id="carousel_sequence" class="carousel slide col-12">
       <div class="carousel-indicators">
         {% for i in range(num_next_courses) %}
-        <button type="button" data-bs-target="#carousel_best" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
+        <button type="button" data-bs-target="#carousel_sequence" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
         {% endfor %}
       </div>
       <div class="carousel-inner">
@@ -23,11 +20,11 @@
         </div>
         {% endfor %}
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#carousel_best" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" data-bs-target="#carousel_sequence" data-bs-slide="prev">
         <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
         <span class="visually-hidden">Previous</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carousel_best" data-bs-slide="next">
+      <button class="carousel-control-next" type="button" data-bs-target="#carousel_sequence" data-bs-slide="next">
         <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
         <span class="visually-hidden">Next</span>
       </button>
