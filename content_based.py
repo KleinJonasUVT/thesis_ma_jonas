@@ -5,6 +5,8 @@ import os
 from flask import session
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
+import nltk
+from nltk.corpus import stopwords
 from database import load_courses_from_db
 
 # Database connection setup
@@ -22,89 +24,104 @@ engine = create_engine(
 courses_dict = load_courses_from_db()
 courses_df = pd.DataFrame(courses_dict)
 
-# Define a TF-IDF Vectorizer Object. Remove all English stop words
-tfidf = TfidfVectorizer(stop_words='english')
+def get_content_based_courses():
+  session_id = session.get('session_id')
+  
+  # Define stopwords
+  stop_words_english = stopwords.words('english')
+  stop_words_dutch = stopwords.words('dutch')
+  custom_stop_words = ['course', 'subject', 'objective', 'content', 'aims', 'student', 'students', 'able', 'exam', 'pass', 'study', 'program', 'ects', 'understand', 'courses',
+  'grade', 'grades', 'assignment', 'assignments', 'completion', 'master', 'level', 'apply', 'vak', 'cursus', 'university', 'research', 'their', 'data', "course", "program", 
+  "semester", "class", "lecture", "syllabus", "academic", "department", "faculty", "credit", "prerequisite", "enrollment", "registration", "study", "degree", "student",
+  "curriculum", "instruction", "assessment", "assignment", "grading", "exam", "teaching", "learning", "module", "professor", "instructor", "advisor", "textbook", "research", 
+  "thesis", "dissertation"]
+  stop_words = list(set(stop_words_english + stop_words_dutch + custom_stop_words))
 
-# Combine 'aims' and 'content' columns
-courses_df['combined_text'] = courses_df['aims'].fillna('') + ' ' + courses_df['content'].fillna('')
+  # Define a TF-IDF Vectorizer Object. Remove all English stop words
+  tfidf = TfidfVectorizer(stop_words=stop_words)
 
-# Convert text to lowercase and remove special characters
-courses_df['combined_text'] = courses_df['combined_text'].str.lower()
-symbols = "!\"#$%&()*+-./:;<=>?@[\]^_`{|}~\n"
-for i in symbols:
-    courses_df['combined_text'] = courses_df['combined_text'].replace(i, ' ')
+  # Combine 'aims' and 'content' columns
+  courses_df['combined_text'] = courses_df['aims'].fillna('') + ' ' + courses_df['content'].fillna('')
 
-# Construct the required TF-IDF matrix by fitting and transforming the data
-tfidf_matrix = tfidf.fit_transform(courses_df['combined_text'])
+  # Convert text to lowercase and remove special characters
+  courses_df['combined_text'] = courses_df['combined_text'].str.lower()
+  symbols = "!\"#$%&()*+-./:;<=>?@[\]^_`{|}~\n"
+  for i in symbols:
+      courses_df['combined_text'] = courses_df['combined_text'].replace(i, ' ')
 
-# Compute the cosine similarity matrix
-cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
+  # Construct the required TF-IDF matrix by fitting and transforming the data
+  tfidf_matrix = tfidf.fit_transform(courses_df['combined_text'])
 
-# Construct a reverse map of indices and course codes
-indices = pd.Series(courses_df.index, index=courses_df['course_code']).drop_duplicates()
+  # Compute the cosine similarity matrix
+  cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
+  course_codes = courses_df['course_code']
+  # Create a DataFrame from the cosine_sim matrix
+  cosine_sim_df = pd.DataFrame(cosine_sim, index=course_codes, columns=course_codes)
 
-# Take course code as input and outputs most similar courses
-def formula_content_based_courses():
-        def get_content_based_courses():
-            session_id = session.get('session_id')
-            with engine.connect() as conn:
-                query = text("""
-                    SELECT `course_code`
-                    FROM `sessions`
-                    WHERE `ID` = :session_id
-                      AND (`activity` = 'clicked' OR `activity` = 'favorited')
-                    ORDER BY `timestamp` DESC
-                    LIMIT 1;
-                """)
+  # Take course code as input and outputs most similar courses
 
-                result = conn.execute(query, {"session_id":session_id})
-                row = result.fetchone()
+  with engine.connect() as conn:
+      query = text("""
+          SELECT `course_code`
+          FROM `sessions`
+          WHERE `ID` = :session_id
+              AND (`activity` = 'clicked' OR `activity` = 'favorited')
+          ORDER BY `timestamp` DESC
+          LIMIT 1;
+      """)
 
-            if row is None:
-                # Handle the case where no data was found
-                return [], None
+      result = conn.execute(query, {"session_id":session_id})
+      row = result.fetchone()
 
-            starting_course = row[0]
+  if row is None:
+      # Handle the case where no data was found
+      return []
 
-            # Get the index of the course that matches the course_code
-            idx = indices[starting_course]
+  starting_course_1 = row[0]
 
-            # Get the pairwise similarity scores of all courses with that course
-            sim_scores = list(enumerate(cosine_sim[idx]))
+  # Get the pairwise similarity scores of all courses with that course
+  similarities_1 = cosine_sim_df.loc[starting_course_1]
 
-            # Sort the courses based on the similarity scores
-            sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+  # Sort the similarities in descending order to find the most similar courses
+  most_similar_courses_1 = similarities_1.sort_values(ascending=False)
 
-            # Get the scores of the 10 most similar courses
-            sim_scores = sim_scores[1:11]
+  # Exclude the course itself
+  most_similar_courses_1 = most_similar_courses_1[most_similar_courses_1.index != starting_course_1]
 
-            # Get the course indices
-            course_indices = [i[0] for i in sim_scores]
+  # Get the course codes of the top 6 most similar courses
+  similar_course_codes_1 = most_similar_courses_1.head(5).index.tolist()
 
-            # Return the top 10 most similar courses
-            return courses_df['course_code'].iloc[course_indices]
+  with engine.connect() as conn:
+      query = text("""
+          SELECT `course_code`
+          FROM `sessions`
+          WHERE `ID` = :session_id
+              AND (`activity` = 'clicked' OR `activity` = 'favorited')
+          ORDER BY `timestamp` DESC
+          LIMIT 1,1;
+      """)
 
-        content_based_courses = get_content_based_courses()
+      result = conn.execute(query, {"session_id":session_id})
+      row = result.fetchone()
 
-        def return_content_based_courses():
-            content_based_courses = get_content_based_courses()
+  if row is None:
+      # Handle the case where no data was found
+      return similar_course_codes_1
 
-            with engine.connect() as conn:
-                try:
-                    result = conn.execute(
-                        text("SELECT * FROM courses WHERE course_code IN :content_based_courses"),
-                        {"content_based_courses": content_based_courses.tolist()}
-                    )
+  starting_course_2 = row[0]
 
-                    content_based_courses_result = []
-                    columns = result.keys()
-                    for row in result:
-                        result_dict = {column: value for column, value in zip(columns, row)}
-                        content_based_courses_result.append(result_dict)
-                    return content_based_courses_result
-                except Exception as e:
-                    return []
+  # Get the pairwise similarity scores of all courses with that course
+  similarities_2 = cosine_sim_df.loc[starting_course_2]
 
-        rec_content_based_courses = return_content_based_courses()
-        return rec_content_based_courses
+  # Sort the similarities in descending order to find the most similar courses
+  most_similar_courses_2 = similarities_2.sort_values(ascending=False)
 
+  # Exclude the course itself
+  most_similar_courses_2 = most_similar_courses_2[most_similar_courses_2.index != starting_course_2]
+
+  # Get the course codes of the top 6 most similar courses
+  similar_course_codes_2 = most_similar_courses_2.head(4).index.tolist()
+
+  similar_course_codes = similar_course_codes_1 + similar_course_codes_2
+
+  return similar_course_codes

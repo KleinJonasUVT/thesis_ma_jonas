@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import secrets
 from database import load_courses_from_db, load_random_courses_from_db, load_best_courses_from_db, load_explore_courses_from_db, load_last_viewed_courses_from_db, load_favorite_courses_from_db, add_click_to_db, search_courses_from_db
 from recommendations import predict_next_course_from_db
-from content_based import formula_content_based_courses
+from content_based import get_content_based_courses
 
 app = Flask(__name__)
 app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
@@ -28,7 +28,7 @@ def home():
   favorite_courses = load_favorite_courses_from_db()
   next_courses = predict_next_course_from_db()
   num_next_courses = len(next_courses)
-  content_based_courses = formula_content_based_courses()
+  content_based_courses = get_content_based_courses()
   num_content_based_courses = len(content_based_courses)
   return render_template('home.html', random_courses=random_courses, num_random_courses=num_random_courses, explore_courses=explore_courses, num_explore_courses=num_explore_courses, last_viewed_courses=last_viewed_courses, num_last_viewed_courses=num_last_viewed_courses, session_id=session_id, favorite_courses=favorite_courses, next_courses=next_courses, num_next_courses=num_next_courses, content_based_courses=content_based_courses, num_content_based_courses=num_content_based_courses)
 
