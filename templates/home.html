@@ -177,6 +177,10 @@
   </div>
   {% if openai_courses %}
     {% include 'ai_rec.html' %}
+  {% else %}
+    <div class="container">
+      <p>Explore our diverse course offerings and as you interact with our content, <b><span style="color: #986B23;">personalized recommendations</span></b> will be crafted just for you!</p>
+    </div>
   {% endif %}
   {% if content_based_courses %}
     {% include 'content_based.html' %}
