@@ -58,19 +58,17 @@ def load_last_viewed_courses_from_db():
             ci.tests,
             ci.block,
             ci.lecturers
-        FROM courses ci
-        INNER JOIN (
-            SELECT 
-                s.course_code, 
-                s.ID
-            FROM sessions s
-            WHERE s.ID = :session_id
-            AND s.timestamp = (
-                SELECT MAX(timestamp)
-                FROM sessions
-                WHERE ID = s.ID AND course_code = s.course_code
-            )
-        ) latest_session ON ci.course_code = latest_session.course_code;
+          FROM courses ci
+          INNER JOIN (
+              SELECT 
+                  s.course_code, 
+                  s.ID,
+                  MAX(s.timestamp) as latest_timestamp
+              FROM sessions s
+              WHERE s.ID = :session_id
+              GROUP BY s.course_code, s.ID
+          ) latest_session ON ci.course_code = latest_session.course_code
+          ORDER BY latest_session.latest_timestamp DESC;
            """), {"session_id":session_id})
         compulsory_courses = []
         columns = result.keys()
