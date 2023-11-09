@@ -2,3 +2,9 @@ Flask
 gunicorn
 sqlalchemy
 pymysql
+pytz
+pandas
+scikit-learn
+openai
+openai[embeddings]
+nltk
