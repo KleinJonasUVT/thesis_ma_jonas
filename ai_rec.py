@@ -157,7 +157,7 @@ def print_recommendations_from_strings():
     # get the embedding of the source string
     query_embedding_2 = embeddings[index_of_source_string_2]
     # get distances between the source embedding and other embeddings (function from embeddings_utils.py)
-    distances = distances_from_embeddings(query_embedding_1, embeddings, distance_metric="cosine")
+    distances = distances_from_embeddings(query_embedding_2, embeddings, distance_metric="cosine")
     # get indices of nearest neighbors (function from embeddings_utils.py)
     indices_of_nearest_neighbors_2 = indices_of_nearest_neighbors_from_distances(distances)
     indices_of_4_nearest_neighbors_2 = indices_of_nearest_neighbors_2[:4]
