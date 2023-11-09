@@ -146,6 +146,11 @@
 
     <div class="container">
         <h1>Search results for "{{ query }}"</h1>
+        <div class="row">
+          <div class="col-12 left">
+            <h3><b><span style="color: #ACBED8;">Search results</span> for "{{ query }}"</b></h3>
+          </div>
+        </div>
 
         {% if results %}
           {% for course in results %}
