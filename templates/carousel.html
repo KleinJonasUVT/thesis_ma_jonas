@@ -6,24 +6,9 @@
   </div>
   <div class="carousel-inner">
     {% for course in content_based_courses %}
-      <div class="carousel-item {% if loop.first %}active{% endif %}">
-        <a href="/course/{{course['course_code']}}" class="card">
-          <div class="carousel-card-body">
-            <div class="course-header">
-              <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
-              <div class="star-button">
-                {% include 'star.html' %}
-              </div>
-            </div>
-              <p class="course-details">
-                {% if course['content'] | length > 250 %}
-                  {{ course['content'][:250] }}...
-                {% else %}
-                  {{ course['content'] }}
-                {% endif %}
-              </p>
-          </div>
-        </a>
+      <div class="col-4">
+        {% include 'star.html' %}
+        {% include 'courseitem.html' %}
       </div>
     {% endfor %}
     <button class="carousel-control-prev" type="button" data-bs-target="#carousel_random" data-bs-slide="prev">
