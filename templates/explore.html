@@ -14,10 +14,10 @@
         <div class="carousel-item{% if loop.first %} active{% endif %}">
           <div class="row">
             {% for course in random_courses[i:i+3] %}
-            <div class="col-4">
-              {% include 'star.html' %}
-              {% include 'courseitem.html' %}
-            </div>
+              <div class="col-4">
+                {% include 'star.html' %}
+                {% include 'courseitem.html' %}
+              </div>
             {% endfor %}
           </div>
         </div>
