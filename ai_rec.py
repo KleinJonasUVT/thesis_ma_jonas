@@ -129,8 +129,8 @@ def print_recommendations_from_strings():
 
     if row is None:
         # Handle the case where no data was found
-        similar_course_codes = similar_course_codes_1
-        course_codes_tuple = tuple(similar_course_codes)
+        course_codes_of_nearest_neighbors = course_codes_of_nearest_neighbors_1
+        course_codes_tuple = tuple(course_codes_of_nearest_neighbors)
 
         def load_similar_courses_from_db():
             with engine.connect() as conn:
