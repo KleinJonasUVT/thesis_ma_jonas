@@ -172,14 +172,14 @@
       <h3><b>Best courses <span style="color: #ACBED8;">for you!</span></b></h3>
     </div>
   </div>
-  {% if next_courses %}
-    {% include 'sequence.html' %}
+  {% if last_viewed_courses %}
+    {% include 'last_viewed.html' %}
+  {% endif %}
+  {% if openai_courses %}
+    {% include 'openai.html' %}
   {% endif %}
   {% if content_based_courses %}
     {% include 'content_based.html' %}
-  {% endif %}
-  {% if last_viewed_courses %}
-    {% include 'last_viewed.html' %}
   {% endif %}
   {% include 'explore.html' %}
 </body>

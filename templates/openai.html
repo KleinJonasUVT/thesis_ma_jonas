@@ -2,15 +2,15 @@
   <div class="row">
     <div id="carousel_sequence" class="carousel slide col-12">
       <div class="carousel-indicators">
-        {% for i in range(num_next_courses) %}
+        {% for i in range(num_openai_courses) %}
         <button type="button" data-bs-target="#carousel_sequence" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
         {% endfor %}
       </div>
       <div class="carousel-inner">
-        {% for i in range(0, next_courses|length, 3) %}
+        {% for i in range(0, openai_courses|length, 3) %}
         <div class="carousel-item{% if loop.first %} active{% endif %}">
           <div class="row">
-            {% for course in next_courses[i:i+3] %}
+            {% for course in openai_courses[i:i+3] %}
             <div class="col-4">
               {% include 'star.html' %}
               {% include 'courseitem.html' %}
