@@ -160,7 +160,7 @@ def print_recommendations_from_strings():
     distances = distances_from_embeddings(query_embedding_1, embeddings, distance_metric="cosine")
     # get indices of nearest neighbors (function from embeddings_utils.py)
     indices_of_nearest_neighbors_2 = indices_of_nearest_neighbors_from_distances(distances)
-    indices_of_4_nearest_neighbors_2 = indices_of_nearest_neighbors_1[:4]
+    indices_of_4_nearest_neighbors_2 = indices_of_nearest_neighbors_2[:4]
 
     course_codes_of_nearest_neighbors_2 = [course_codes[i] for i in indices_of_4_nearest_neighbors_2]
 
