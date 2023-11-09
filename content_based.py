@@ -107,8 +107,7 @@ def get_content_based_courses():
 
   if row is None:
       # Handle the case where no data was found
-      similar_course_codes = similar_course_codes_1
-      course_codes_tuple = tuple(similar_course_codes)
+      course_codes_tuple_1 = tuple(similar_course_codes_1)
 
       def load_similar_courses_from_db():
         with engine.connect() as conn:
@@ -117,7 +116,7 @@ def get_content_based_courses():
             course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers 
             FROM courses 
             WHERE course_code IN :similar_course_codes
-            """), {'similar_course_codes': course_codes_tuple})
+            """), {'similar_course_codes': course_codes_tuple_1})
             courses = []
             columns = result.keys()
             for row in result:
@@ -125,9 +124,9 @@ def get_content_based_courses():
                 courses.append(result_dict)
             return courses
 
-      similar_courses = load_similar_courses_from_db()
+      similar_courses_1 = load_similar_courses_from_db()
       
-      return similar_courses
+      return similar_courses_1
 
   starting_course_2 = row[0]
 

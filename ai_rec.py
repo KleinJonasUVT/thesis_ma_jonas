@@ -129,8 +129,8 @@ def print_recommendations_from_strings():
 
     if row is None:
         # Handle the case where no data was found
-        course_codes_of_nearest_neighbors = course_codes_of_nearest_neighbors_1
-        course_codes_tuple = tuple(course_codes_of_nearest_neighbors)
+        course_codes_of_nearest_neighbors_1 = course_codes_of_nearest_neighbors_1
+        course_codes_tuple_1 = tuple(course_codes_of_nearest_neighbors_1)
 
         def load_similar_courses_from_db():
             with engine.connect() as conn:
@@ -139,7 +139,7 @@ def print_recommendations_from_strings():
                 course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers 
                 FROM courses 
                 WHERE course_code IN :similar_course_codes
-                """), {'similar_course_codes': course_codes_tuple})
+                """), {'similar_course_codes': course_codes_tuple_1})
                 courses = []
                 columns = result.keys()
                 for row in result:
@@ -147,8 +147,8 @@ def print_recommendations_from_strings():
                     courses.append(result_dict)
                 return courses
 
-        similar_courses = load_similar_courses_from_db()
-        return similar_courses
+        similar_courses_1 = load_similar_courses_from_db()
+        return similar_courses_1
 
     starting_course_2 = row[0]
 
