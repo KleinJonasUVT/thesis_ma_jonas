@@ -5,6 +5,6 @@ pymysql
 pytz
 pandas
 scikit-learn
-openai
+openai==0.28.1
 openai[embeddings]
 nltk

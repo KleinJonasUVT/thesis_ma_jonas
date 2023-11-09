@@ -3,6 +3,7 @@ import pandas as pd
 import pickle
 from sqlalchemy import create_engine
 from sqlalchemy import text
+import os
 import openai
 from openai.embeddings_utils import (
     get_embedding,
