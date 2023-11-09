@@ -13,6 +13,7 @@ from openai.embeddings_utils import (
     indices_of_nearest_neighbors_from_distances,
 )
 from database import load_courses_from_db
+from flask import session
 
 # Set your OpenAI API key here
 openai.api_key = os.environ['OpenAi_API']
@@ -146,4 +147,23 @@ def print_recommendations_from_strings():
 
     course_codes_of_nearest_neighbors = course_codes_of_nearest_neighbors_1 + course_codes_of_nearest_neighbors_2
 
-    return course_codes_of_nearest_neighbors
+    course_codes_tuple = tuple(course_codes_of_nearest_neighbors)
+
+    def load_similar_courses_from_db():
+        with engine.connect() as conn:
+            result = conn.execute(text("""
+            SELECT 
+            course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers 
+            FROM courses 
+            WHERE course_code IN :similar_course_codes
+            """), {'similar_course_codes': course_codes_tuple})
+            courses = []
+            columns = result.keys()
+            for row in result:
+                result_dict = {column: value for column, value in zip(columns, row)}
+                courses.append(result_dict)
+            return courses
+
+    similar_courses = load_similar_courses_from_db()
+
+    return similar_courses

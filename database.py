@@ -19,7 +19,7 @@ engine = create_engine(
 
 def load_courses_from_db():
   with engine.connect() as conn:
-    result = conn.execute(text("SELECT * FROM courses"))
+    result = conn.execute(text("SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses"))
     courses = []
     columns = result.keys()
     for row in result:
@@ -30,7 +30,7 @@ def load_courses_from_db():
 def load_random_courses_from_db():
     with engine.connect() as conn:
         result = conn.execute(text("""
-          SELECT * FROM courses
+          SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses
           ORDER BY RAND()
           LIMIT 9;
         """))
@@ -41,34 +41,36 @@ def load_random_courses_from_db():
             random_courses.append(result_dict)
         return random_courses
 
-def load_explore_courses_from_db():
-    with engine.connect() as conn:
-        result = conn.execute(text("SELECT * FROM courses WHERE site_placement = 'Best';"))
-        explore_courses = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            explore_courses.append(result_dict)
-        return explore_courses
-
 def load_last_viewed_courses_from_db():
     with engine.connect() as conn:
         session_id = session.get('session_id')
 
         result = conn.execute(text("""
-          SELECT ci.*
-          FROM courses ci
-          INNER JOIN (
-               SELECT s.course_code, s.ID
-               FROM sessions s
-               WHERE s.ID = :session_id
-               AND s.timestamp = (
-                   SELECT MAX(timestamp)
-                   FROM sessions
-                   WHERE ID = s.ID AND course_code = s.course_code
-               )
-           ) latest_session
-           ON ci.course_code = latest_session.course_code;
+          SELECT 
+            ci.course_name,
+            ci.course_code,
+            ci.language,
+            ci.aims,
+            ci.content,
+            ci.Degree,
+            ci.ECTS,
+            ci.school,
+            ci.tests,
+            ci.block,
+            ci.lecturers
+        FROM courses ci
+        INNER JOIN (
+            SELECT 
+                s.course_code, 
+                s.ID
+            FROM sessions s
+            WHERE s.ID = :session_id
+            AND s.timestamp = (
+                SELECT MAX(timestamp)
+                FROM sessions
+                WHERE ID = s.ID AND course_code = s.course_code
+            )
+        ) latest_session ON ci.course_code = latest_session.course_code;
            """), {"session_id":session_id})
         compulsory_courses = []
         columns = result.keys()
@@ -82,7 +84,18 @@ def load_favorite_courses_from_db():
   
   with engine.connect() as conn:
     query = text("""
-      SELECT ci.*
+      SELECT 
+        ci.course_name,
+        ci.course_code,
+        ci.language,
+        ci.aims,
+        ci.content,
+        ci.Degree,
+        ci.ECTS,
+        ci.school,
+        ci.tests,
+        ci.block,
+        ci.lecturers
       FROM courses ci
       JOIN (
           SELECT course_code,
@@ -119,7 +132,7 @@ def add_click_to_db(session_id, course_code, data):
 def search_courses_from_db(query):
   with engine.connect() as conn:
       result = conn.execute(
-          text("SELECT * FROM courses WHERE course_name LIKE :query OR course_code LIKE :query OR aims LIKE :query OR content LIKE :query OR lecturers LIKE :query"),
+          text("SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_name LIKE :query OR course_code LIKE :query OR aims LIKE :query OR content LIKE :query OR lecturers LIKE :query"),
           {"query": "%" + query + "%"}
       )
       courses = []

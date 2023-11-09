@@ -6,6 +6,7 @@ from flask import session
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 import nltk
+nltk.download('stopwords')
 from nltk.corpus import stopwords
 from database import load_courses_from_db
 
@@ -123,5 +124,23 @@ def get_content_based_courses():
   similar_course_codes_2 = most_similar_courses_2.head(4).index.tolist()
 
   similar_course_codes = similar_course_codes_1 + similar_course_codes_2
+  course_codes_tuple = tuple(similar_course_codes)
 
-  return similar_course_codes
+  def load_similar_courses_from_db():
+    with engine.connect() as conn:
+        result = conn.execute(text("""
+        SELECT 
+        course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers 
+        FROM courses 
+        WHERE course_code IN :similar_course_codes
+        """), {'similar_course_codes': course_codes_tuple})
+        courses = []
+        columns = result.keys()
+        for row in result:
+            result_dict = {column: value for column, value in zip(columns, row)}
+            courses.append(result_dict)
+        return courses
+
+  similar_courses = load_similar_courses_from_db()
+
+  return similar_courses
