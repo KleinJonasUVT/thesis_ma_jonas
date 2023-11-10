@@ -51,12 +51,18 @@ def ai_search_results(query):
 
     def load_search_courses_from_db():
             with engine.connect() as conn:
-                result = conn.execute(text("""
-                SELECT 
-                course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers 
-                FROM courses 
-                WHERE course_code IN :similar_course_codes
-                """), {'similar_course_codes': similar_course_codes_tuple})
+                query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_code IN :similar_course_codes ORDER BY CASE"
+        
+                for i, code in enumerate(similar_course_codes, start=1):
+                    query += f" WHEN :code{i} THEN {i}"
+                
+                query += " END"
+                
+                # Execute the dynamically generated query
+                query_params = {'similar_course_codes': similar_course_codes_tuple}
+                query_params.update({f'code{i}': code for i, code in enumerate(similar_course_codes, start=1)})
+                
+                result = conn.execute(text(query), query_params)
                 courses = []
                 columns = result.keys()
                 for row in result:

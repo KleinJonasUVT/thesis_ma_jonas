@@ -5,6 +5,7 @@ from database import load_courses_from_db, load_random_courses_from_db, load_las
 from ai_rec import print_recommendations_from_strings
 from content_based import get_content_based_courses
 from ai_search import ai_search_results
+import random
 
 app = Flask(__name__)
 app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
