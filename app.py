@@ -12,11 +12,7 @@ app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
 def landing():
     session['session_id'] = secrets.token_hex(16)
     session_id = session.get('session_id')
-    response = make_response(render_template('welcome.html'))
-    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '-1'
-    return response
+    return render_template('welcome.html')
 
 @app.route("/home")
 def home():
@@ -97,11 +93,12 @@ def clicked_course(course_code):
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     query = request.args.get('query')  # Retrieve the query parameter from the URL
+    results = ai_search_results(query)
 
-    if query:
-        results = search_courses_from_db(query)
-    else:
-        results = []  # Initialize an empty list for the initial render
+    #if query:
+    #    results = search_courses_from_db(query)
+    #else:
+    #    results = []  # Initialize an empty list for the initial render
 
     return render_template('search.html', query=query, results=results)
 
