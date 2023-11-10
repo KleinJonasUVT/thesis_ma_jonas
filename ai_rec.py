@@ -10,7 +10,7 @@ from openai.embeddings_utils import (
     distances_from_embeddings,
     indices_of_nearest_neighbors_from_distances,
 )
-from database import load_courses_from_db, get_embeddings_from_db
+from database import load_courses_from_db
 from flask import session
 
 # Set your OpenAI API key here
@@ -33,14 +33,38 @@ engine = create_engine(
 
 courses_dict = load_courses_from_db()
 courses_df = pd.DataFrame(courses_dict)
+course_codes = courses_df["course_code"].tolist()
+
+# Use the SQLAlchemy engine to execute the query and retrieve the data
+with engine.connect() as conn:
+    result_1 = conn.execute(text("SELECT embedding FROM courses LIMIT 1001"))
+
+    # Convert the result to a list of embedding strings
+    embedding_strings_1 = [row[0] for row in result_1]
+
+# Convert the embedding strings to lists of floats
+embeddings_list_of_lists = []
+for embedding_str in embedding_strings_1:
+    # Assuming the embeddings are stored as space-separated values in the 'embedding' column
+    embedding_values_1 = [float(value) for value in embedding_str.split()]
+    embeddings_list_of_lists.append(embedding_values_1)
+
+with engine.connect() as conn:
+    result_2 = conn.execute(text("SELECT embedding FROM courses LIMIT 1001, 1001"))
+
+    # Convert the result to a list of embedding strings
+    embedding_strings_2 = [row[0] for row in result_2]
+
+for embedding_str in embedding_strings_2:
+    # Assuming the embeddings are stored as space-separated values in the 'embedding' column
+    embedding_values_2 = [float(value) for value in embedding_str.split()]
+    embeddings_list_of_lists.append(embedding_values_2)
 
 def print_recommendations_from_strings():
     session_id = session.get('session_id')
 
-    course_codes = courses_df["course_code"].tolist()
-
     # get embeddings for all strings
-    embeddings = get_embeddings_from_db()
+    embeddings = embeddings_list_of_lists
 
     # Check for empty embeddings and remove them
     valid_indices = [i for i, emb in enumerate(embeddings) if len(emb) > 0]

@@ -139,38 +139,3 @@ def search_courses_from_db(query):
           result_dict = {column: value for column, value in zip(columns, row)}
           courses.append(result_dict)
       return courses
-
-def get_embeddings_from_db():
-  # Use the SQLAlchemy engine to execute the query and retrieve the data
-  with engine.connect() as conn:
-      result_1 = conn.execute(text("SELECT embedding FROM courses LIMIT 1001"))
-
-      # Convert the result to a list of embedding strings
-      embedding_strings_1 = [row[0] for row in result_1]
-
-  # Convert the embedding strings to lists of floats
-  embeddings_list_of_lists = []
-  for embedding_str in embedding_strings_1:
-      # Assuming the embeddings are stored as space-separated values in the 'embedding' column
-      embedding_values_1 = [float(value) for value in embedding_str.split()]
-      embeddings_list_of_lists.append(embedding_values_1)
-
-  with engine.connect() as conn:
-      result_2 = conn.execute(text("SELECT embedding FROM courses LIMIT 1001, 1001"))
-
-      # Convert the result to a list of embedding strings
-      embedding_strings_2 = [row[0] for row in result_2]
-
-  for embedding_str in embedding_strings_2:
-      # Assuming the embeddings are stored as space-separated values in the 'embedding' column
-      embedding_values_2 = [float(value) for value in embedding_str.split()]
-      embeddings_list_of_lists.append(embedding_values_2)
-
-  return embeddings_list_of_lists
-
-
-
-
-
-
-
