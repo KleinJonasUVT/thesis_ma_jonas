@@ -4,17 +4,14 @@ import pickle
 from sqlalchemy import create_engine
 from sqlalchemy import text
 import os
+import numpy as np
 import openai
 from openai.embeddings_utils import (
     get_embedding,
-    distances_from_embeddings,
-    tsne_components_from_embeddings,
-    chart_from_components,
-    indices_of_nearest_neighbors_from_distances,
+    cosine_similarity
 )
 from database import load_courses_from_db, get_embeddings_from_db
 from flask import session
-from app import app, request
 
 # Set your OpenAI API key here
 openai.api_key = os.environ['OpenAi_API']
@@ -38,15 +35,18 @@ courses_dict = load_courses_from_db()
 courses_df = pd.DataFrame(courses_dict)
 
 def ai_search_results(query):
-    query_embedding = get_embedding(query, EMBEDDING_MODEL)
+    course_codes = courses_df["course_code"].tolist()
+    query_embedding = get_embedding(query, engine=EMBEDDING_MODEL)
     course_embeddings = get_embeddings_from_db()
 
-    distances = distances_from_embeddings(query_embedding, course_embeddings, distance_metric="cosine")
-    # get indices of nearest neighbors (function from embeddings_utils.py)
-    indices_of_nearest_neighbors = indices_of_nearest_neighbors_from_distances(distances)
+    df = pd.DataFrame({'embeddings': course_embeddings})
+
+    df["similarity"] = df.embeddings.apply(lambda x: cosine_similarity(x, query_embedding))
+
+    top_similarity_row_numbers = df.nlargest(6, 'similarity').index.tolist()
 
     # find courses based on the indexes
-    similar_course_codes = [course_codes[i] for i in indices_of_nearest_neighbors]
+    similar_course_codes = [course_codes[i] for i in top_similarity_row_numbers]
     similar_course_codes_tuple = tuple(similar_course_codes)
 
     def load_search_courses_from_db():
