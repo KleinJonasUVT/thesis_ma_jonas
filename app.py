@@ -28,7 +28,18 @@ def home():
   num_openai_courses = len(openai_courses)
   content_based_courses = get_content_based_courses()
   num_content_based_courses = len(content_based_courses)
-  return render_template('home.html', random_courses=random_courses, num_random_courses=num_random_courses, last_viewed_courses=last_viewed_courses, num_last_viewed_courses=num_last_viewed_courses, session_id=session_id, favorite_courses=favorite_courses, content_based_courses=content_based_courses, num_content_based_courses=num_content_based_courses, openai_courses=openai_courses, num_openai_courses=num_openai_courses)
+  total_courses = []
+  if random.choice([True, False]):
+        list1, list2 = openai_courses, content_based_courses
+  else:
+        list1, list2 = content_based_courses, openai_courses
+
+  # Voeg elementen om en om toe
+  for i in range(len(openai_courses)):
+        total_courses.append(list1[i])
+        total_courses.append(list2[i])
+  num_total_courses= len(total_courses)
+  return render_template('home.html', total_courses=total_courses, num_total_courses=num_total_courses, random_courses=random_courses, num_random_courses=num_random_courses, last_viewed_courses=last_viewed_courses, num_last_viewed_courses=num_last_viewed_courses, session_id=session_id, favorite_courses=favorite_courses, content_based_courses=content_based_courses, num_content_based_courses=num_content_based_courses, openai_courses=openai_courses, num_openai_courses=num_openai_courses)
 
 @app.route("/courses")
 def hello_world():

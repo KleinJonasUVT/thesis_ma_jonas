@@ -100,12 +100,18 @@ def print_recommendations_from_strings():
 
         def load_similar_courses_from_db():
             with engine.connect() as conn:
-                result = conn.execute(text("""
-                SELECT 
-                course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers 
-                FROM courses 
-                WHERE course_code IN :similar_course_codes
-                """), {'similar_course_codes': course_codes_tuple_1})
+                query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_code IN :similar_course_codes ORDER BY CASE"
+        
+                for i, code in enumerate(course_codes_of_nearest_neighbors_1, start=1):
+                    query += f" WHEN :code{i} THEN {i}"
+                        
+                query += " END"
+                        
+                # Execute the dynamically generated query
+                query_params = {'similar_course_codes': course_codes_tuple_1}
+                query_params.update({f'code{i}': code for i, code in enumerate(similar_course_codes, start=1)})
+                        
+                result = conn.execute(text(query), query_params)
                 courses = []
                 columns = result.keys()
                 for row in result:
@@ -136,12 +142,18 @@ def print_recommendations_from_strings():
 
     def load_similar_courses_from_db():
         with engine.connect() as conn:
-            result = conn.execute(text("""
-            SELECT 
-            course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers 
-            FROM courses 
-            WHERE course_code IN :similar_course_codes
-            """), {'similar_course_codes': course_codes_tuple})
+            query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_code IN :similar_course_codes ORDER BY CASE"
+    
+            for i, code in enumerate(course_codes_of_nearest_neighbors_1, start=1):
+                query += f" WHEN :code{i} THEN {i}"
+                    
+            query += " END"
+                    
+            # Execute the dynamically generated query
+            query_params = {'similar_course_codes': course_codes_tuple_1}
+            query_params.update({f'code{i}': code for i, code in enumerate(similar_course_codes, start=1)})
+                    
+            result = conn.execute(text(query), query_params)
             courses = []
             columns = result.keys()
             for row in result:
