@@ -1,6 +1,5 @@
 # imports
 import pandas as pd
-import pickle
 from sqlalchemy import create_engine
 from sqlalchemy import text
 import os

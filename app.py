@@ -2,9 +2,8 @@ from flask import Flask, render_template, jsonify, request, redirect, session, u
 from datetime import datetime, timedelta
 import secrets
 from database import load_courses_from_db, load_random_courses_from_db, load_last_viewed_courses_from_db, load_favorite_courses_from_db, add_click_to_db, search_courses_from_db
-from ai_rec import print_recommendations_from_strings
+from ai_rec import print_recommendations_from_strings, ai_search_results
 from content_based import get_content_based_courses
-from ai_search import ai_search_results
 import random
 
 app = Flask(__name__)
