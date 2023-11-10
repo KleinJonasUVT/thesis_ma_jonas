@@ -144,13 +144,13 @@ def print_recommendations_from_strings():
         with engine.connect() as conn:
             query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_code IN :similar_course_codes ORDER BY CASE"
     
-            for i, code in enumerate(course_codes_of_nearest_neighbors_1, start=1):
+            for i, code in enumerate(course_codes_of_nearest_neighbors, start=1):
                 query += f" WHEN :code{i} THEN {i}"
                     
             query += " END"
                     
             # Execute the dynamically generated query
-            query_params = {'similar_course_codes': course_codes_tuple_1}
+            query_params = {'similar_course_codes': course_codes_tuple}
             query_params.update({f'code{i}': code for i, code in enumerate(similar_course_codes, start=1)})
                     
             result = conn.execute(text(query), query_params)
