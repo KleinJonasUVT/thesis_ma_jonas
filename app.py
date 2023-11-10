@@ -94,14 +94,26 @@ def clicked_course(course_code):
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     query = request.args.get('query')  # Retrieve the query parameter from the URL
-    results = ai_search_results(query)
+    results_ai = ai_search_results(query)
 
-    #if query:
-    #    results = search_courses_from_db(query)
-    #else:
-    #    results = []  # Initialize an empty list for the initial render
+    if query:
+        results_keyword = search_courses_from_db(query)
+    else:
+        results_keyword = []  # Initialize an empty list for the initial render
 
-    return render_template('search.html', query=query, results=results)
+    total_results = []
+
+    if random.choice([True, False]):
+        list1, list2 = results_ai, results_keyword
+    else:
+        list1, list2 = results_keyword, results_ai
+
+    # Voeg elementen om en om toe
+    for i in range(len(results_ai)):
+        total_results.append(list1[i])
+        total_results.append(list2[i])
+
+    return render_template('search.html', query=query, results=total_results)
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0', debug=True)
