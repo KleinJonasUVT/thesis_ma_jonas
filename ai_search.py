@@ -12,7 +12,7 @@ from openai.embeddings_utils import (
     chart_from_components,
     indices_of_nearest_neighbors_from_distances,
 )
-from database import load_courses_from_db
+from database import load_courses_from_db, get_embeddings_from_db
 from flask import session
 from app import app, request
 
