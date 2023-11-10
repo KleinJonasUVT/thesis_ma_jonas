@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, redirect, session, url_for
+from flask import Flask, render_template, jsonify, request, redirect, session, url_for, make_response
 from datetime import datetime, timedelta
 import secrets
 from database import load_courses_from_db, load_random_courses_from_db, load_last_viewed_courses_from_db, load_favorite_courses_from_db, add_click_to_db, search_courses_from_db
@@ -12,7 +12,11 @@ app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
 def landing():
     session['session_id'] = secrets.token_hex(16)
     session_id = session.get('session_id')
-    return render_template('welcome.html')
+    response = make_response(render_template('welcome.html'))
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '-1'
+    return response
 
 @app.route("/home")
 def home():
