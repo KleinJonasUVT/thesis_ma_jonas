@@ -8,8 +8,6 @@ import openai
 from openai.embeddings_utils import (
     get_embedding,
     distances_from_embeddings,
-    tsne_components_from_embeddings,
-    chart_from_components,
     indices_of_nearest_neighbors_from_distances,
 )
 from database import load_courses_from_db, get_embeddings_from_db
