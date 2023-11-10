@@ -120,7 +120,7 @@ def get_content_based_courses():
                     
             # Execute the dynamically generated query
             query_params = {'similar_course_codes': course_codes_tuple_1}
-            query_params.update({f'code{i}': code for i, code in enumerate(similar_course_codes, start=1)})
+            query_params.update({f'code{i}': code for i, code in enumerate(similar_course_codes_1, start=1)})
                     
             result = conn.execute(text(query), query_params)
             courses = []
