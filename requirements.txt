@@ -8,3 +8,5 @@ scikit-learn
 openai==0.28.1
 openai[embeddings]
 nltk
+matplotlib
+numpy
