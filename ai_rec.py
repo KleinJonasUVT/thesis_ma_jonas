@@ -190,7 +190,7 @@ def print_recommendations_from_strings():
 
 def ai_search_results(query):
     query_embedding = get_embedding(query, engine=EMBEDDING_MODEL)
-    course_embeddings = get_embeddings_from_db()
+    course_embeddings = embeddings_list_of_lists
     course_codes = courses_df["course_code"].tolist()
 
     df = pd.DataFrame({'embeddings': course_embeddings})
