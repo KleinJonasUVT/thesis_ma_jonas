@@ -10,3 +10,4 @@ openai[embeddings]
 nltk
 matplotlib
 numpy
+plotly
