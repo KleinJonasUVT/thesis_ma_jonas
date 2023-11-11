@@ -125,7 +125,7 @@ def add_click_to_db(session_id, course_code, data):
 
   with engine.connect() as conn:
       conn.execute(
-          text("INSERT INTO sessions (ID, timestamp, course_code, activity) VALUES (:session_id, :time, :course_code, :activity, :algorithm)"),
+          text("INSERT INTO sessions (ID, timestamp, course_code, activity, algorithm) VALUES (:session_id, :time, :course_code, :activity, :algorithm)"),
           {"session_id": session_id, "time": time, "course_code": course_code, "activity": activity, "algorithm": algorithm}
       )
 
