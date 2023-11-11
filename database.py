@@ -120,11 +120,13 @@ def load_favorite_courses_from_db():
 
 def add_click_to_db(session_id, course_code, data):
   time = datetime.now(pytz.timezone('Europe/Amsterdam'))
+  activity = data.get('activity')
+  algorithm = data.get('algorithm')
 
   with engine.connect() as conn:
       conn.execute(
-          text("INSERT INTO sessions (ID, timestamp, course_code, activity) VALUES (:session_id, :time, :course_code, :activity)"),
-          {"session_id": session_id, "time": time, "course_code": course_code, "activity": data['activity'], "algorithm":data['algorithm']}
+          text("INSERT INTO sessions (ID, timestamp, course_code, activity) VALUES (:session_id, :time, :course_code, :activity, :algorithm)"),
+          {"session_id": session_id, "time": time, "course_code": course_code, "activity": activity, "algorithm": algorithm}
       )
 
 def search_courses_from_db(query):
