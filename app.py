@@ -98,19 +98,23 @@ def remove_rating(course_code):
 def clicked_course(course_code):
     data = request.form
     session_id = session.get('session_id')
+    results_ai = session.get('results_ai', [])
     add_click_to_db(session_id, course_code, data)
-    return redirect(url_for('show_course', course_code=course_code))
+    return redirect(url_for('show_course', course_code=course_code, results_ai=results_ai))
 
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     query = request.args.get('query')  # Retrieve the query parameter from the URL
     results_ai = ai_search_results(query)
+    session['results_ai'] = results_ai
 
     if query:
         results_keyword = search_courses_from_db(query)
     else:
         results_keyword = []  # Initialize an empty list for the initial render
+
+    session['results_keyword'] = results_keyword
 
     total_results = []
 
@@ -119,10 +123,19 @@ def search():
     else:
         list1, list2 = results_keyword, results_ai
 
-    # Voeg elementen om en om toe
-    for i in range(len(results_ai)):
+    # Find the length of the shorter list
+    min_length = min(len(list1), len(list2))
+
+    # Add elements alternately from both lists up to the length of the shorter list
+    for i in range(min_length):
         total_results.append(list1[i])
         total_results.append(list2[i])
+
+    # Append remaining elements from the longer list, if any
+    if len(list1) > min_length:
+        total_results.extend(list1[min_length:])
+    if len(list2) > min_length:
+        total_results.extend(list2[min_length:])
 
     return render_template('search.html', query=query, results=total_results, results_ai=results_ai, results_keyword=results_keyword)
 
