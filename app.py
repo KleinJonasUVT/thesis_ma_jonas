@@ -124,7 +124,7 @@ def search():
         total_results.append(list1[i])
         total_results.append(list2[i])
 
-    return render_template('search.html', query=query, results=total_results)
+    return render_template('search.html', query=query, results=total_results, results_ai=results_ai, results_keyword=results_keyword)
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0', debug=True)
