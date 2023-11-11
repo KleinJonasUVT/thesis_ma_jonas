@@ -37,7 +37,7 @@ courses_df = pd.DataFrame(courses_dict)
 
 # Use the SQLAlchemy engine to execute the query and retrieve the data
 with engine.connect() as conn:
-    result_1 = conn.execute(text("SELECT embedding FROM courses LIMIT 1001"))
+    result_1 = conn.execute(text("SELECT embedding FROM courses LIMIT 427"))
 
     # Convert the result to a list of embedding strings
     embedding_strings_1 = [row[0] for row in result_1]
@@ -50,7 +50,7 @@ for embedding_str in embedding_strings_1:
     embeddings_list_of_lists.append(embedding_values_1)
 
 with engine.connect() as conn:
-    result_2 = conn.execute(text("SELECT embedding FROM courses LIMIT 1001, 1001"))
+    result_2 = conn.execute(text("SELECT embedding FROM courses LIMIT 427, 427"))
 
     # Convert the result to a list of embedding strings
     embedding_strings_2 = [row[0] for row in result_2]
@@ -59,6 +59,29 @@ for embedding_str in embedding_strings_2:
     # Assuming the embeddings are stored as space-separated values in the 'embedding' column
     embedding_values_2 = [float(value) for value in embedding_str.split()]
     embeddings_list_of_lists.append(embedding_values_2)
+
+with engine.connect() as conn:
+    result_3 = conn.execute(text("SELECT embedding FROM courses LIMIT 854, 427"))
+
+    # Convert the result to a list of embedding strings
+    embedding_strings_3 = [row[0] for row in result_3]
+
+for embedding_str in embedding_strings_3:
+    # Assuming the embeddings are stored as space-separated values in the 'embedding' column
+    embedding_values_3 = [float(value) for value in embedding_str.split()]
+    embeddings_list_of_lists.append(embedding_values_3)
+
+with engine.connect() as conn:
+    result_4 = conn.execute(text("SELECT embedding FROM courses LIMIT 1281, 427"))
+
+    # Convert the result to a list of embedding strings
+    embedding_strings_4 = [row[0] for row in result_4]
+
+for embedding_str in embedding_strings_4:
+    # Assuming the embeddings are stored as space-separated values in the 'embedding' column
+    embedding_values_4 = [float(value) for value in embedding_str.split()]
+    embeddings_list_of_lists.append(embedding_values_4)
+
 
 def print_recommendations_from_strings():
     session_id = session.get('session_id')
