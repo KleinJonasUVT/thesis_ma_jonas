@@ -12,8 +12,18 @@
                 {% endif %}
             </p>
             <input type="hidden" name="activity" value="clicked" />
-            {% if course in results_ai or course in openai_courses %}
+            {% if course in results_ai and search %}
             <input type="hidden" name="algorithm" value="openai" />
+            <input type="hidden" name="place" value="search" />
+            {% elif course in results_keyword and search %}
+            <input type="hidden" name="algorithm" value="keyword" />
+            <input type="hidden" name="place" value="search" />
+            {% elif course in openai_courses and recommendation %}
+            <input type="hidden" name="algorithm" value="openai" />
+            <input type="hidden" name="place" value="recommendations" />
+            {% elif course in content_based_courses and recommendation %}
+            <input type="hidden" name="algorithm" value="tfidf" />
+            <input type="hidden" name="place" value="recommendations" />
             {% else %}
             <input type="hidden" name="algorithm" value="simple" />
             {% endif %}

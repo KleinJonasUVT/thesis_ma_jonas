@@ -9,15 +9,16 @@ import random
 app = Flask(__name__)
 app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
 
-@app.route("/")
+@app.route("/landing")
 def landing():
     session['session_id'] = secrets.token_hex(16)
     session_id = session.get('session_id')
     return render_template('welcome.html')
 
-@app.route("/home")
+@app.route("/")
 def home():
-  session_id = session.get('session_id')
+  if 'session_id' not in session:
+        session['session_id'] = secrets.token_hex(16)
   random_courses = load_random_courses_from_db()
   num_random_courses = len(random_courses)
   last_viewed_courses = load_last_viewed_courses_from_db()
@@ -27,32 +28,14 @@ def home():
   num_openai_courses = len(openai_courses)
   content_based_courses = get_content_based_courses()
   num_content_based_courses = len(content_based_courses)
-  total_courses = []
-  if random.choice([True, False]):
-        list1, list2 = openai_courses, content_based_courses
-  else:
-        list1, list2 = content_based_courses, openai_courses
+  used_courses = random.choice([openai_courses, content_based_courses])
+  num_used_courses= len(used_courses)
+  return render_template('home.html', recommendation=True, used_courses=used_courses, num_used_courses=num_used_courses, random_courses=random_courses, num_random_courses=num_random_courses, last_viewed_courses=last_viewed_courses, num_last_viewed_courses=num_last_viewed_courses, session_id=session_id, favorite_courses=favorite_courses, content_based_courses=content_based_courses, num_content_based_courses=num_content_based_courses, openai_courses=openai_courses, num_openai_courses=num_openai_courses)
 
-  # Voeg elementen om en om toe
-  for i in range(len(openai_courses)):
-        total_courses.append(list1[i])
-        total_courses.append(list2[i])
-  num_total_courses= len(total_courses)
-  return render_template('home.html', total_courses=total_courses, num_total_courses=num_total_courses, random_courses=random_courses, num_random_courses=num_random_courses, last_viewed_courses=last_viewed_courses, num_last_viewed_courses=num_last_viewed_courses, session_id=session_id, favorite_courses=favorite_courses, content_based_courses=content_based_courses, num_content_based_courses=num_content_based_courses, openai_courses=openai_courses, num_openai_courses=num_openai_courses)
-
-@app.route("/courses")
-def hello_world():
-    courses = load_courses_from_db()
-    sorted_courses = sorted(courses, key=lambda x: x['course_name'])
-    return render_template('courses.html', sorted_courses=sorted_courses)
-
-@app.route("/inlogpage")
-def load_inlogpage():
-    return render_template('inlogpage.html')
-
-@app.route("/welcome")
-def welcome():
-    return render_template('welcome.html')
+@app.route('/clear_session')
+def clear_session():
+    session.clear()  # This clears the session
+    return redirect(url_for('home'))
 
 @app.route("/api/courses")
 def list_courses():
@@ -74,10 +57,6 @@ def show_course(course_code):
 def favorite_courses():
     favorite_courses = load_favorite_courses_from_db()
     return render_template('favourites.html', favorite_courses=favorite_courses)
-
-@app.route("/interests")
-def get_interests():
-    return render_template('interests.html')
 
 @app.route("/course/<course_code>/rating", methods=['POST'])
 def rating_course(course_code):
@@ -102,7 +81,6 @@ def clicked_course(course_code):
     results_ai = session.get('results_ai', [])
     add_click_to_db(session_id, course_code, data)
     return redirect(url_for('show_course', course_code=course_code, results_ai=results_ai))
-
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
@@ -138,7 +116,7 @@ def search():
     if len(list2) > min_length:
         total_results.extend(list2[min_length:])
 
-    return render_template('search.html', query=query, results=total_results, results_ai=results_ai, results_keyword=results_keyword)
+    return render_template('search.html', query=query, results=total_results, results_ai=results_ai, results_keyword=results_keyword, search=True)
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0', debug=True)
