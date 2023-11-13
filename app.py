@@ -115,7 +115,7 @@ def search():
     else:
         results_keyword = []  # Initialize an empty list for the initial render
 
-    session['results_keyword'] = results_keyword
+    session['results_keyword'] = results_keyword[:6]
 
     total_results = []
 
