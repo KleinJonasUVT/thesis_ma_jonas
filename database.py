@@ -132,7 +132,7 @@ def add_click_to_db(session_id, course_code, data):
 def search_courses_from_db(query):
   with engine.connect() as conn:
       result = conn.execute(
-          text("SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_name LIKE :query OR course_code LIKE :query OR aims LIKE :query OR content LIKE :query OR lecturers LIKE :query"),
+          text("SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_name LIKE :query OR course_code LIKE :query OR aims LIKE :query OR content LIKE :query OR lecturers LIKE :query LIMIT 6"),
           {"query": "%" + query + "%"}
       )
       courses = []
