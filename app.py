@@ -9,16 +9,18 @@ import random
 app = Flask(__name__)
 app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
 
-@app.route("/landing")
+@app.route("/")
 def landing():
-    session['session_id'] = secrets.token_hex(16)
+    if 'session_id' not in session:
+        session['session_id'] = secrets.token_hex(16)
     session_id = session.get('session_id')
     return render_template('welcome.html')
 
-@app.route("/")
+@app.route("/home")
 def home():
   if 'session_id' not in session:
         session['session_id'] = secrets.token_hex(16)
+  session_id = session.get('session_id')
   random_courses = load_random_courses_from_db()
   num_random_courses = len(random_courses)
   last_viewed_courses = load_last_viewed_courses_from_db()
