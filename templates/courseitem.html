@@ -12,7 +12,7 @@
                 {% endif %}
             </p>
             <input type="hidden" name="activity" value="clicked" />
-            {% if course in results_ai %}
+            {% if course in results_ai or course in openai_courses %}
             <input type="hidden" name="algorithm" value="openai" />
             {% else %}
             <input type="hidden" name="algorithm" value="simple" />
