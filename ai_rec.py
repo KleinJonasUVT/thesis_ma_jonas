@@ -34,8 +34,6 @@ engine = create_engine(
 
 courses_dict = load_courses_from_db()
 courses_df = pd.DataFrame(courses_dict)
-last_viewed_courses = load_last_viewed_courses_from_db()
-last_viewed_course_codes = [course['course_code'] for course in last_viewed]
 
 # Use the SQLAlchemy engine to execute the query and retrieve the data
 with engine.connect() as conn:
@@ -88,6 +86,9 @@ for embedding_str in embedding_strings_4:
 def print_recommendations_from_strings():
     session_id = session.get('session_id')
     course_codes = courses_df["course_code"].tolist()
+
+    last_viewed_courses = load_last_viewed_courses_from_db()
+    last_viewed_course_codes = [course['course_code'] for course in last_viewed]
 
     # get embeddings for all strings
     embeddings = embeddings_list_of_lists
