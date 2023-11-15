@@ -30,7 +30,8 @@ def load_courses_from_db():
 def load_random_courses_from_db():
     with engine.connect() as conn:
         result = conn.execute(text("""
-          SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses
+          SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers 
+          FROM courses
           ORDER BY RAND()
           LIMIT 9;
         """))
@@ -122,11 +123,12 @@ def add_click_to_db(session_id, course_code, data):
   time = datetime.now(pytz.timezone('Europe/Amsterdam'))
   activity = data.get('activity')
   algorithm = data.get('algorithm')
+  place = data.get('place')
 
   with engine.connect() as conn:
       conn.execute(
-          text("INSERT INTO sessions (ID, timestamp, course_code, activity, algorithm) VALUES (:session_id, :time, :course_code, :activity, :algorithm)"),
-          {"session_id": session_id, "time": time, "course_code": course_code, "activity": activity, "algorithm": algorithm}
+          text("INSERT INTO sessions (ID, timestamp, course_code, activity, algorithm, place) VALUES (:session_id, :time, :course_code, :activity, :algorithm, :place)"),
+          {"session_id": session_id, "time": time, "course_code": course_code, "activity": activity, "algorithm": algorithm, "place": place}
       )
 
 def search_courses_from_db(query):

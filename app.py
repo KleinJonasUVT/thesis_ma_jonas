@@ -32,6 +32,7 @@ def home():
   num_content_based_courses = len(content_based_courses)
   used_courses = random.choice([openai_courses, content_based_courses])
   num_used_courses= len(used_courses)
+  random_courses = [course for course in random_courses if course['course_code'] not in used_courses]
   return render_template('home.html', recommendation=True, used_courses=used_courses, num_used_courses=num_used_courses, random_courses=random_courses, num_random_courses=num_random_courses, last_viewed_courses=last_viewed_courses, num_last_viewed_courses=num_last_viewed_courses, session_id=session_id, favorite_courses=favorite_courses, content_based_courses=content_based_courses, num_content_based_courses=num_content_based_courses, openai_courses=openai_courses, num_openai_courses=num_openai_courses)
 
 @app.route('/clear_session')

@@ -24,8 +24,9 @@
             {% elif course in content_based_courses and recommendation %}
             <input type="hidden" name="algorithm" value="tfidf" />
             <input type="hidden" name="place" value="recommendations" />
-            {% else %}
-            <input type="hidden" name="algorithm" value="simple" />
+            {% elif course in random_courses %}
+            <input type="hidden" name="algorithm" value="random" />
+            <input type="hidden" name="place" value="random" />
             {% endif %}
         </div>
     </a>
