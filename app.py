@@ -19,25 +19,18 @@ def landing():
 @app.route("/home")
 def home():
     # Check if 'used_courses' and 'num_used_courses' are already in the session
-    if 'used_courses' not in session or not session['used_courses']:
-        # Generate new recommendations only if 'used_courses' is not in session or is empty
-        openai_courses = []
-        content_based_courses = []
-        
-        # Randomly choose between openai_courses and content_based_courses
-        if random.choice([True, False]):
-            openai_courses = print_recommendations_from_strings()
-            used_courses = openai_courses
-        else:
-            content_based_courses = get_content_based_courses()
-            used_courses = content_based_courses
-
-        # Assign the selected courses and their count to the session
-        session['used_courses'] = used_courses
-        session['num_used_courses'] = len(used_courses)
+    if 'algorithm_type' not in session or not session['algorithm_type']:
+        algorithm_type = random.choice(['openai', 'tfidf'])
+        session['algorithm_type'] = algorithm_type
     else:
-        # Retrieve the existing courses from the session
-        used_courses = session.get('used_courses')
+        algorithm_type = session.get('algorithm_type')
+
+    if algorithm_type == 'openai':
+        openai_courses = print_recommendations_from_strings()
+        used_courses = openai_courses
+    else:
+        content_based_courses = get_content_based_courses()
+        used_courses = content_based_courses
     
     # Your existing code for session_id, random_courses, etc. remains unchanged
     if 'session_id' not in session:
