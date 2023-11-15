@@ -99,7 +99,7 @@ def get_content_based_courses():
   starting_course_1 = row[0]
 
   similar_course_codes_1 = similar_courses_dict[starting_course_1]
-  similar_course_codes_1 = [course for course in similar_course_codes_1 if course['course_code'] not in last_viewed_course_codes]
+  similar_course_codes_1 = [course for course in similar_course_codes_1 if course not in last_viewed_course_codes]
   similar_course_codes_1 = similar_course_codes_1[:5]
 
   with engine.connect() as conn:
@@ -147,7 +147,7 @@ def get_content_based_courses():
   starting_course_2 = row[0]
 
   similar_course_codes_2 = similar_courses_dict[starting_course_2]
-  similar_course_codes_2 = [course for course in similar_course_codes_2 if course['course_code'] not in last_viewed_course_codes]
+  similar_course_codes_2 = [course for course in similar_course_codes_2 if course not in last_viewed_course_codes]
   similar_course_codes_2 = similar_course_codes_2[:4]
 
   similar_course_codes = similar_course_codes_1 + similar_course_codes_2
