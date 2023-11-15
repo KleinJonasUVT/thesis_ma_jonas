@@ -8,7 +8,7 @@ from sklearn.metrics.pairwise import linear_kernel
 import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
-from database import load_courses_from_db
+from database import load_courses_from_db, load_last_viewed_courses_from_db
 
 # Database connection setup
 db_connection_string = os.environ['DB_CONNECTION_STRING']
@@ -75,6 +75,9 @@ for course_code in cosine_sim_df.columns:
 def get_content_based_courses():
   session_id = session.get('session_id')
   # Take course code as input and outputs most similar courses
+  last_viewed_courses = load_last_viewed_courses_from_db()
+  if last_viewed_courses:
+    last_viewed_course_codes = [course['course_code'] for course in last_viewed_courses]
 
   with engine.connect() as conn:
       query = text("""
@@ -96,6 +99,8 @@ def get_content_based_courses():
   starting_course_1 = row[0]
 
   similar_course_codes_1 = similar_courses_dict[starting_course_1]
+  similar_course_codes_1 = [course for course in similar_course_codes_1 if course['course_code'] not in last_viewed_course_codes]
+  similar_course_codes_1 = similar_course_codes_1[:5]
 
   with engine.connect() as conn:
       query = text("""
@@ -142,6 +147,8 @@ def get_content_based_courses():
   starting_course_2 = row[0]
 
   similar_course_codes_2 = similar_courses_dict[starting_course_2]
+  similar_course_codes_2 = [course for course in similar_course_codes_2 if course['course_code'] not in last_viewed_course_codes]
+  similar_course_codes_2 = similar_course_codes_2[:4]
 
   similar_course_codes = similar_course_codes_1 + similar_course_codes_2
   course_codes_tuple = tuple(similar_course_codes)
