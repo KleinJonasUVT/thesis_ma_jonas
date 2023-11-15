@@ -64,6 +64,22 @@ def list_courses():
 
 @app.route("/course/<course_code>")
 def show_course(course_code):
+    if 'algorithm_type' not in session or not session['algorithm_type']:
+        algorithm_type = random.choice(['openai', 'tfidf'])
+        session['algorithm_type'] = algorithm_type
+    else:
+        algorithm_type = session.get('algorithm_type')
+
+    openai_courses = []
+    content_based_courses = []
+    if algorithm_type == 'openai':
+        openai_courses = print_recommendations_from_strings()
+        used_courses = openai_courses
+        num_used_courses = len(used_courses)
+    else:
+        content_based_courses = get_content_based_courses()
+        used_courses = content_based_courses
+        num_used_courses = len(used_courses)
     courses = load_courses_from_db()
     course = [course for course in courses if course.get('course_code') == course_code]
     favorite_courses = load_favorite_courses_from_db()
@@ -71,7 +87,7 @@ def show_course(course_code):
     if not course:
         return "Not Found", 404
     else:
-        return render_template('coursepage.html', course=course[0], favorite_courses=favorite_courses, results_ai=results_ai)
+        return render_template('coursepage.html', recommendation=True, course=course[0], favorite_courses=favorite_courses, results_ai=results_ai, openai_courses=openai_courses, content_based_courses=content_based_courses, used_courses=used_courses, num_used_courses=num_used_courses)
 
 @app.route('/favourites')
 def favorite_courses():
