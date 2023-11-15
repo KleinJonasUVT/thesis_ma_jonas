@@ -88,7 +88,8 @@ def print_recommendations_from_strings():
     course_codes = courses_df["course_code"].tolist()
 
     last_viewed_courses = load_last_viewed_courses_from_db()
-    last_viewed_course_codes = [course['course_code'] for course in last_viewed]
+    if last_viewed_courses:
+        last_viewed_course_codes = [course['course_code'] for course in last_viewed]
 
     # get embeddings for all strings
     embeddings = embeddings_list_of_lists
