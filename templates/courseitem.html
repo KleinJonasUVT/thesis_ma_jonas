@@ -30,6 +30,9 @@
             {% elif course in last_viewed_courses %}
             <input type="hidden" name="algorithm" value="last_viewed" />
             <input type="hidden" name="place" value="last_viewed" />
+            {% elif favorite}
+            <input type="hidden" name="algorithm" value="favorite" />
+            <input type="hidden" name="place" value="favorite" />
             {% endif %}
         </div>
     </a>

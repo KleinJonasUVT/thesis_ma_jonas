@@ -59,7 +59,7 @@ def show_course(course_code):
 @app.route('/favourites')
 def favorite_courses():
     favorite_courses = load_favorite_courses_from_db()
-    return render_template('favourites.html', favorite_courses=favorite_courses)
+    return render_template('favourites.html', favorite_courses=favorite_courses, favorite=True)
 
 @app.route("/course/<course_code>/rating", methods=['POST'])
 def rating_course(course_code):
