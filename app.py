@@ -25,6 +25,8 @@ def home():
     else:
         algorithm_type = session.get('algorithm_type')
 
+    openai_courses = []
+    content_based_courses = []
     if algorithm_type == 'openai':
         openai_courses = print_recommendations_from_strings()
         used_courses = openai_courses
