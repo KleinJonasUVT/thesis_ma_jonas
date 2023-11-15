@@ -70,7 +70,7 @@
     top: 50%;
     display: inline-block;
     background: none;  /* Remove default background */
-    transform: translateY(-25%);  /* Center it vertically */
+    transform: translateY(-20%);  /* Center it vertically */
 }
 
   
@@ -79,11 +79,11 @@
   }
   
   .carousel-control-prev {
-      left: -4%;
+      left: calc(-4% - 30px);
   }
   
   .carousel-control-next {
-      right: -4%;
+      right: calc(-4% - 30px);
   }
   
   .fa-chevron-left, .fa-chevron-right {
@@ -163,7 +163,7 @@
   <div class="container">
     <div class="row mt-4">
       <div class="course-header">
-        <h2>{{ course['course_name'] }}</h2>
+        <h3><b>{{ course['course_name'] }}</b></h3>
         {% include 'star.html' %}
       </div>
       <div class="col-8">
