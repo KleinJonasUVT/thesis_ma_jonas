@@ -11,7 +11,7 @@ from openai.embeddings_utils import (
     distances_from_embeddings,
     indices_of_nearest_neighbors_from_distances,
 )
-from database import load_courses_from_db, last_viewed_courses
+from database import load_courses_from_db, load_last_viewed_courses_from_db
 from flask import session
 
 # Set your OpenAI API key here
@@ -34,7 +34,7 @@ engine = create_engine(
 
 courses_dict = load_courses_from_db()
 courses_df = pd.DataFrame(courses_dict)
-last_viewed_courses = last_viewed_courses()
+last_viewed_courses = load_last_viewed_courses_from_db()
 last_viewed_course_codes = [course['course_code'] for course in last_viewed]
 
 # Use the SQLAlchemy engine to execute the query and retrieve the data
