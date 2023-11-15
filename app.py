@@ -30,9 +30,11 @@ def home():
     if algorithm_type == 'openai':
         openai_courses = print_recommendations_from_strings()
         used_courses = openai_courses
+        num_used_courses = len(used_courses)
     else:
         content_based_courses = get_content_based_courses()
         used_courses = content_based_courses
+        num_used_courses = len(used_courses)
     
     # Your existing code for session_id, random_courses, etc. remains unchanged
     if 'session_id' not in session:
