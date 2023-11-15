@@ -52,6 +52,108 @@
       justify-content: space-between; /* Align items to the left and right edges */
       align-items: flex-start;
     }
+
+    .card {
+      margin-bottom: 20px;
+    }
+  
+     .card:hover {
+      border: 2px solid #986B23; /* Change the border color on hover */
+    }
+
+  i {
+          font-size: 18px;
+          margin-left: 10px;
+        }
+
+ .carousel-control-prev, .carousel-control-next {
+    top: 50%;
+    display: inline-block;
+    background: none;  /* Remove default background */
+    transform: translateY(-50%);  /* Center it vertically */
+}
+
+  
+  .carousel-control-prev-icon, .carousel-control-next-icon {
+      display: none;  /* Hide default Bootstrap icons */
+  }
+  
+  .carousel-control-prev {
+      left: -4%;
+  }
+  
+  .carousel-control-next {
+      right: -4%;
+  }
+  
+  .fa-chevron-left, .fa-chevron-right {
+      font-size: 24px; /* Adjust size if necessary */
+  }
+
+  .carousel {
+    margin-top: 25px;
+  }
+
+  .carousel-card-body {
+    margin-left: 70px;
+    margin-right: 60px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+
+  p.course-details {
+    margin-top: 10px;  /* Adjust as per requirement */
+  }
+
+  .course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .star input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  
+  .star {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .star svg {
+    position: relative;
+    top: 0;
+    left: 0;
+    height: 30px;
+    width: 30px;
+    transition: all 0.3s;
+    fill: #666;
+  }
+  
+  .star svg:hover {
+    transform: scale(1.1);
+  }
+  
+  .star input:checked ~ svg {
+    fill: #ffeb49;
+  }
+
+  .col-4 {
+    position: relative;
+  }
+
+  .star-container {
+    position: absolute;
+    top: 10px; /* Adjust the top value to position the star vertically */
+    right: 20px; /* Adjust the right value to position the star horizontally */
+    z-index: 1;
+  }
   </style>
   <title>Course Page</title>
   {% include 'bootstrap.html' %}
