@@ -11,7 +11,7 @@ from openai.embeddings_utils import (
     distances_from_embeddings,
     indices_of_nearest_neighbors_from_distances,
 )
-from database import load_courses_from_db
+from database import load_courses_from_db, last_viewed_courses
 from flask import session
 
 # Set your OpenAI API key here
@@ -34,6 +34,8 @@ engine = create_engine(
 
 courses_dict = load_courses_from_db()
 courses_df = pd.DataFrame(courses_dict)
+last_viewed_courses = last_viewed_courses()
+last_viewed_course_codes = [course['course_code'] for course in last_viewed]
 
 # Use the SQLAlchemy engine to execute the query and retrieve the data
 with engine.connect() as conn:
@@ -116,12 +118,16 @@ def print_recommendations_from_strings():
 
     index_of_source_string_1 = courses_df[courses_df["course_code"] == starting_course_1].index[0]
 
+    last_viewed_indices = courses_df[courses_df['course_code'].isin(last_viewed_course_codes)].index
+    last_viewed_indices_set = set(last_viewed_indices)
+
     # get the embedding of the source string
     query_embedding_1 = embeddings[index_of_source_string_1]
     # get distances between the source embedding and other embeddings (function from embeddings_utils.py)
     distances = distances_from_embeddings(query_embedding_1, embeddings, distance_metric="cosine")
     # get indices of nearest neighbors (function from embeddings_utils.py)
     indices_of_nearest_neighbors_1 = indices_of_nearest_neighbors_from_distances(distances)
+    indices_of_nearest_neighbors_1 = [index for index in indices_of_nearest_neighbors_1 if index not in last_viewed_indices_set]
     indices_of_5_nearest_neighbors_1 = indices_of_nearest_neighbors_1[:5]
 
     course_codes_of_nearest_neighbors_1 = [course_codes[i] for i in indices_of_5_nearest_neighbors_1]
@@ -178,6 +184,7 @@ def print_recommendations_from_strings():
     distances = distances_from_embeddings(query_embedding_2, embeddings, distance_metric="cosine")
     # get indices of nearest neighbors (function from embeddings_utils.py)
     indices_of_nearest_neighbors_2 = indices_of_nearest_neighbors_from_distances(distances)
+    indices_of_nearest_neighbors_2 = [index for index in indices_of_nearest_neighbors_2 if index not in last_viewed_indices_set]
     indices_of_4_nearest_neighbors_2 = indices_of_nearest_neighbors_2[:4]
 
     course_codes_of_nearest_neighbors_2 = [course_codes[i] for i in indices_of_4_nearest_neighbors_2]
