@@ -18,22 +18,42 @@ def landing():
 
 @app.route("/home")
 def home():
-  if 'session_id' not in session:
+    # Check if 'used_courses' and 'num_used_courses' are already in the session
+    if 'used_courses' not in session or not session['used_courses']:
+        # Generate new recommendations only if 'used_courses' is not in session or is empty
+        openai_courses = []
+        content_based_courses = []
+        
+        # Randomly choose between openai_courses and content_based_courses
+        if random.choice([True, False]):
+            openai_courses = print_recommendations_from_strings()
+            used_courses = openai_courses
+        else:
+            content_based_courses = get_content_based_courses()
+            used_courses = content_based_courses
+
+        # Assign the selected courses and their count to the session
+        session['used_courses'] = used_courses
+        session['num_used_courses'] = len(used_courses)
+    else:
+        # Retrieve the existing courses from the session
+        used_courses = session.get('used_courses')
+    
+    # Your existing code for session_id, random_courses, etc. remains unchanged
+    if 'session_id' not in session:
         session['session_id'] = secrets.token_hex(16)
-  session_id = session.get('session_id')
-  random_courses = load_random_courses_from_db()
-  num_random_courses = len(random_courses)
-  last_viewed_courses = load_last_viewed_courses_from_db()
-  num_last_viewed_courses = len(last_viewed_courses)
-  favorite_courses = load_favorite_courses_from_db()
-  openai_courses = print_recommendations_from_strings()
-  num_openai_courses = len(openai_courses)
-  content_based_courses = get_content_based_courses()
-  num_content_based_courses = len(content_based_courses)
-  used_courses = random.choice([openai_courses, content_based_courses])
-  num_used_courses= len(used_courses)
-  random_courses = [course for course in random_courses if course['course_code'] not in used_courses]
-  return render_template('home.html', recommendation=True, used_courses=used_courses, num_used_courses=num_used_courses, random_courses=random_courses, num_random_courses=num_random_courses, last_viewed_courses=last_viewed_courses, num_last_viewed_courses=num_last_viewed_courses, session_id=session_id, favorite_courses=favorite_courses, content_based_courses=content_based_courses, num_content_based_courses=num_content_based_courses, openai_courses=openai_courses, num_openai_courses=num_openai_courses)
+    session_id = session.get('session_id')
+    random_courses = load_random_courses_from_db()
+    num_random_courses = len(random_courses)
+    last_viewed_courses = load_last_viewed_courses_from_db()
+    num_last_viewed_courses = len(last_viewed_courses)
+    favorite_courses = load_favorite_courses_from_db()
+
+    # Filter random_courses as per your existing logic
+    random_courses = [course for course in random_courses if course['course_code'] not in used_courses]
+
+    # Return the template with the necessary variables
+    return render_template('home.html', recommendation=True, used_courses=used_courses, num_used_courses=session['num_used_courses'], random_courses=random_courses, num_random_courses=num_random_courses, last_viewed_courses=last_viewed_courses, num_last_viewed_courses=num_last_viewed_courses, session_id=session_id, favorite_courses=favorite_courses, content_based_courses=content_based_courses, num_content_based_courses=len(content_based_courses), openai_courses=openai_courses, num_openai_courses=len(openai_courses))
 
 @app.route('/clear_session')
 def clear_session():
