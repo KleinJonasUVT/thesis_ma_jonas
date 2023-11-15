@@ -89,7 +89,7 @@ def print_recommendations_from_strings():
 
     last_viewed_courses = load_last_viewed_courses_from_db()
     if last_viewed_courses:
-        last_viewed_course_codes = [course['course_code'] for course in last_viewed]
+        last_viewed_course_codes = [course['course_code'] for course in last_viewed_courses]
 
     # get embeddings for all strings
     embeddings = embeddings_list_of_lists
