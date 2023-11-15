@@ -32,11 +32,11 @@ def home():
   num_content_based_courses = len(content_based_courses)
 
   if 'used_courses' in session:
-        used_courses = session['used_courses']
-    else:
-        # If not in session, make a random choice and save it in the session
-        used_courses = random.choice([openai_courses, content_based_courses])
-        session['used_courses'] = used_courses
+    used_courses = session['used_courses']
+  else:
+    # If not in session, make a random choice and save it in the session
+    used_courses = random.choice([openai_courses, content_based_courses])
+    session['used_courses'] = used_courses
 
   num_used_courses= len(used_courses)
   random_courses = [course for course in random_courses if course['course_code'] not in used_courses]
