@@ -157,10 +157,6 @@
     justify-content: space-between;
     align-items: center;
   }
-
-  .no-wrap {
-        white-space: nowrap;
-    }
 </style>
   {% include 'navbar.html' %}
 <body>
@@ -170,8 +166,8 @@
     </div>
     <div class="row">
       <div class="col">
-        <p style="margin-top: 22px;">Welcome to our <b><span style="color: #986B23;">course catalogue!</span></b> This directory is your guide to diverse academic offerings. As you embark on your <b><span style="color: #986B23;">academic journey</span></b> with us, utilize this catalogue to make informed choices that align with your educational and career aspirations.</p>
-        <p class="no-wrap" style="margin-top: 22px;">Please note: This catalogue is created for our Master's thesis in Marketing Analytics and is not officially affiliated with Tilburg University. It is intended as a project for academic purposes only. Read our <a href="/disclaimer" class="nav-link p-0 text-body-secondary">disclaimer</a> for more information.</p>
+        <p class="introduction">Welcome to our <b><span style="color: #986B23;">course catalogue!</span></b> This directory is your guide to diverse academic offerings. As you embark on your <b><span style="color: #986B23;">academic journey</span></b> with us, utilize this catalogue to make informed choices that align with your educational and career aspirations.</p>
+        <p class="introduction">Please note: This catalogue is created for our Master's thesis in Marketing Analytics and is not officially affiliated with Tilburg University. It is intended as a project for academic purposes only. Read our <a href="/disclaimer" class="nav-link p-0 text-body-secondary">disclaimer</a> for more information.</p>
       </div>
       <div class="col">
           {% include 'random.html' %}
