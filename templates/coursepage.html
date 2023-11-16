@@ -184,11 +184,11 @@
         <b>School: </b>{{ course['school'] }} <br>
         <b>Block: </b>{{ course['block'] }}</p>
         <h5><b>Recommended!</b></h5>
-        <form method="POST" action="/course/{{ course['course_code'] }}/clicked" id="courseForm-{{ course['course_code'] }}">
-          <a href="#" class="card" onclick="document.getElementById('courseForm-{{ course['course_code'] }}').submit(); return false;">
+        <form method="POST" action="/course/{{ used_courses[0]['course_code'] }}/clicked" id="courseForm-{{ used_courses[0]['course_code'] }}">
+          <a href="#" class="card" onclick="document.getElementById('courseForm-{{ used_courses[0]['course_code'] }}').submit(); return false;">
               <div class="card-body">
                   <div class="course-header">
-                      <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
+                      <h5 class="card-title"><b>{{ used_courses[0]['course_name'] }}</b></h5>
                   </div>
                   <p class="course-details">
                       {% if used_courses[0]['content'] | length > 250 %}
