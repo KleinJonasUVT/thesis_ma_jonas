@@ -176,7 +176,6 @@
         <h5><b>Lecturers</b></h5>
         <p>{{ course['lecturers'] }}</p>
       </div>
-      {% include 'star.html' %}
       <div class="col-4">
         <p style="margin-top: 30px"><b>Course code: </b>{{ course['course_code'] }} <br>
         <b>Language: </b>{{ course['language'] }} <br>
@@ -185,6 +184,7 @@
         <b>School: </b>{{ course['school'] }} <br>
         <b>Block: </b>{{ course['block'] }}</p>
         <h5><b>Recommended <span style="color: #ACBED8;">for you!</span></b></h5>
+        {% include 'star.html' %}
         <form method="POST" action="/course/{{ used_courses[0]['course_code'] }}/clicked" id="courseForm-{{ used_courses[0]['course_code'] }}">
           <a href="#" class="card" onclick="document.getElementById('courseForm-{{ used_courses[0]['course_code'] }}').submit(); return false;">
               <div class="card-body">
