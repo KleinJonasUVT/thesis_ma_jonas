@@ -134,64 +134,64 @@ def print_recommendations_from_strings():
 
     course_codes_of_nearest_neighbors_1 = [course_codes[i] for i in indices_of_5_nearest_neighbors_1]
 
-    with engine.connect() as conn:
-        query = text("""
-            SELECT `course_code`
-            FROM `sessions`
-            WHERE `ID` = :session_id
-                AND (`activity` = 'clicked' OR `activity` = 'favorited')
-            ORDER BY `timestamp` DESC
-            LIMIT 1,1;
-        """)
+    #with engine.connect() as conn:
+    #    query = text("""
+    #        SELECT `course_code`
+    #        FROM `sessions`
+    #        WHERE `ID` = :session_id
+    #            AND (`activity` = 'clicked' OR `activity` = 'favorited')
+    #        ORDER BY `timestamp` DESC
+    #        LIMIT 1,1;
+    #    """)
+#
+    #    result = conn.execute(query, {"session_id":session_id})
+    #    row = result.fetchone()
+#
+    #if row is None:
+    #    # Handle the case where no data was found
+    #    course_codes_of_nearest_neighbors_1 = course_codes_of_nearest_neighbors_1
+    #    course_codes_tuple_1 = tuple(course_codes_of_nearest_neighbors_1)
+#
+    #    def load_similar_courses_from_db():
+    #        with engine.connect() as conn:
+    #            query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_code IN :similar_course_codes ORDER BY CASE"
+    #    
+    #            for i, code in enumerate(course_codes_of_nearest_neighbors_1, start=1):
+    #                query += f" WHEN :code{i} THEN {i}"
+    #                    
+    #            query += " END"
+    #                    
+    #            # Execute the dynamically generated query
+    #            query_params = {'similar_course_codes': course_codes_tuple_1}
+    #            query_params.update({f'code{i}': code for i, code in enumerate(course_codes_of_nearest_neighbors_1, start=1)})
+    #                    
+    #            result = conn.execute(text(query), query_params)
+    #            courses = []
+    #            columns = result.keys()
+    #            for row in result:
+    #                result_dict = {column: value for column, value in zip(columns, row)}
+    #                courses.append(result_dict)
+    #            return courses
+#
+    #    similar_courses_1 = load_similar_courses_from_db()
+    #    return similar_courses_1
+#
+    #starting_course_2 = row[0]
+#
+    #index_of_source_string_2 = courses_df[courses_df["course_code"] == starting_course_2].index[0]
+#
+    ## get the embedding of the source string
+    #query_embedding_2 = embeddings[index_of_source_string_2]
+    ## get distances between the source embedding and other embeddings (function from embeddings_utils.py)
+    #distances = distances_from_embeddings(query_embedding_2, embeddings, distance_metric="cosine")
+    ## get indices of nearest neighbors (function from embeddings_utils.py)
+    #indices_of_nearest_neighbors_2 = indices_of_nearest_neighbors_from_distances(distances)
+    #indices_of_nearest_neighbors_2 = [index for index in indices_of_nearest_neighbors_2 if index not in last_viewed_indices_set]
+    #indices_of_4_nearest_neighbors_2 = indices_of_nearest_neighbors_2[:4]
+#
+    #course_codes_of_nearest_neighbors_2 = [course_codes[i] for i in indices_of_4_nearest_neighbors_2]
 
-        result = conn.execute(query, {"session_id":session_id})
-        row = result.fetchone()
-
-    if row is None:
-        # Handle the case where no data was found
-        course_codes_of_nearest_neighbors_1 = course_codes_of_nearest_neighbors_1
-        course_codes_tuple_1 = tuple(course_codes_of_nearest_neighbors_1)
-
-        def load_similar_courses_from_db():
-            with engine.connect() as conn:
-                query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_code IN :similar_course_codes ORDER BY CASE"
-        
-                for i, code in enumerate(course_codes_of_nearest_neighbors_1, start=1):
-                    query += f" WHEN :code{i} THEN {i}"
-                        
-                query += " END"
-                        
-                # Execute the dynamically generated query
-                query_params = {'similar_course_codes': course_codes_tuple_1}
-                query_params.update({f'code{i}': code for i, code in enumerate(course_codes_of_nearest_neighbors_1, start=1)})
-                        
-                result = conn.execute(text(query), query_params)
-                courses = []
-                columns = result.keys()
-                for row in result:
-                    result_dict = {column: value for column, value in zip(columns, row)}
-                    courses.append(result_dict)
-                return courses
-
-        similar_courses_1 = load_similar_courses_from_db()
-        return similar_courses_1
-
-    starting_course_2 = row[0]
-
-    index_of_source_string_2 = courses_df[courses_df["course_code"] == starting_course_2].index[0]
-
-    # get the embedding of the source string
-    query_embedding_2 = embeddings[index_of_source_string_2]
-    # get distances between the source embedding and other embeddings (function from embeddings_utils.py)
-    distances = distances_from_embeddings(query_embedding_2, embeddings, distance_metric="cosine")
-    # get indices of nearest neighbors (function from embeddings_utils.py)
-    indices_of_nearest_neighbors_2 = indices_of_nearest_neighbors_from_distances(distances)
-    indices_of_nearest_neighbors_2 = [index for index in indices_of_nearest_neighbors_2 if index not in last_viewed_indices_set]
-    indices_of_4_nearest_neighbors_2 = indices_of_nearest_neighbors_2[:4]
-
-    course_codes_of_nearest_neighbors_2 = [course_codes[i] for i in indices_of_4_nearest_neighbors_2]
-
-    course_codes_of_nearest_neighbors = course_codes_of_nearest_neighbors_1 + course_codes_of_nearest_neighbors_2
+    course_codes_of_nearest_neighbors = course_codes_of_nearest_neighbors_1 #+ course_codes_of_nearest_neighbors_2
 
     course_codes_tuple = tuple(course_codes_of_nearest_neighbors)
 
