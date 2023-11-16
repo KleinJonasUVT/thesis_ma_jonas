@@ -154,5 +154,9 @@ def search():
 
     return render_template('search.html', query=query, results=total_results, results_ai=results_ai, results_keyword=results_keyword, search=True)
 
+@app.route("/disclaimer")
+def disclaimer():
+    return render_template('disclaimer.html')
+
 if __name__ == "__main__":
   app.run(host='0.0.0.0', debug=True)
