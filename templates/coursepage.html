@@ -163,7 +163,7 @@
   <div class="container">
     <div class="row mt-4">
       <div class="course-header">
-        <h3><b>{{ course['course_name'] }}</b></h3>
+        <h3 style="margin-right: 30px;"><b>{{ course['course_name'] }}</b></h3>
         {% if course in favorite_courses %}
           <form action="/course/{{ course['course_code'] }}/remove_rating" method="post">
               <input type="hidden" name="activity" value="unfavorited">
