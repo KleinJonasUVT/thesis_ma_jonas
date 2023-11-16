@@ -100,57 +100,57 @@ def get_content_based_courses():
 
   similar_course_codes_1 = similar_courses_dict[starting_course_1]
   similar_course_codes_1 = [course for course in similar_course_codes_1 if course not in last_viewed_course_codes]
-  similar_course_codes_1 = similar_course_codes_1[:5]
+  similar_course_codes_1 = similar_course_codes_1[:9]
 
-  with engine.connect() as conn:
-      query = text("""
-          SELECT `course_code`
-          FROM `sessions`
-          WHERE `ID` = :session_id
-              AND (`activity` = 'clicked' OR `activity` = 'favorited')
-          ORDER BY `timestamp` DESC
-          LIMIT 1,1;
-      """)
-
-      result = conn.execute(query, {"session_id":session_id})
-      row = result.fetchone()
-
-  if row is None:
-      # Handle the case where no data was found
-      course_codes_tuple_1 = tuple(similar_course_codes_1)
-
-      def load_similar_courses_from_db():
-        with engine.connect() as conn:
-            query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_code IN :similar_course_codes ORDER BY CASE"
-        
-            for i, code in enumerate(similar_course_codes_1, start=1):
-                query += f" WHEN :code{i} THEN {i}"
-                    
-            query += " END"
-                    
-            # Execute the dynamically generated query
-            query_params = {'similar_course_codes': course_codes_tuple_1}
-            query_params.update({f'code{i}': code for i, code in enumerate(similar_course_codes_1, start=1)})
-                    
-            result = conn.execute(text(query), query_params)
-            courses = []
-            columns = result.keys()
-            for row in result:
-                result_dict = {column: value for column, value in zip(columns, row)}
-                courses.append(result_dict)
-            return courses
-
-      similar_courses_1 = load_similar_courses_from_db()
-      
-      return similar_courses_1
-
-  starting_course_2 = row[0]
-
-  similar_course_codes_2 = similar_courses_dict[starting_course_2]
-  similar_course_codes_2 = [course for course in similar_course_codes_2 if course not in last_viewed_course_codes]
-  similar_course_codes_2 = similar_course_codes_2[:4]
-
-  similar_course_codes = similar_course_codes_1 + similar_course_codes_2
+  #with engine.connect() as conn:
+  #    query = text("""
+  #        SELECT `course_code`
+  #        FROM `sessions`
+  #        WHERE `ID` = :session_id
+  #            AND (`activity` = 'clicked' OR `activity` = 'favorited')
+  #        ORDER BY `timestamp` DESC
+  #        LIMIT 1,1;
+  #    """)
+#
+  #    result = conn.execute(query, {"session_id":session_id})
+  #    row = result.fetchone()
+#
+  #if row is None:
+  #    # Handle the case where no data was found
+  #    course_codes_tuple_1 = tuple(similar_course_codes_1)
+#
+  #    def load_similar_courses_from_db():
+  #      with engine.connect() as conn:
+  #          query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_code IN :similar_course_codes ORDER BY CASE"
+  #      
+  #          for i, code in enumerate(similar_course_codes_1, start=1):
+  #              query += f" WHEN :code{i} THEN {i}"
+  #                  
+  #          query += " END"
+  #                  
+  #          # Execute the dynamically generated query
+  #          query_params = {'similar_course_codes': course_codes_tuple_1}
+  #          query_params.update({f'code{i}': code for i, code in enumerate(similar_course_codes_1, start=1)})
+  #                  
+  #          result = conn.execute(text(query), query_params)
+  #          courses = []
+  #          columns = result.keys()
+  #          for row in result:
+  #              result_dict = {column: value for column, value in zip(columns, row)}
+  #              courses.append(result_dict)
+  #          return courses
+#
+  #    similar_courses_1 = load_similar_courses_from_db()
+  #    
+  #    return similar_courses_1
+#
+  #starting_course_2 = row[0]
+#
+  #similar_course_codes_2 = similar_courses_dict[starting_course_2]
+  #similar_course_codes_2 = [course for course in similar_course_codes_2 if course not in last_viewed_course_codes]
+  #similar_course_codes_2 = similar_course_codes_2[:4]
+#
+  similar_course_codes = similar_course_codes_1 #+ similar_course_codes_2
   course_codes_tuple = tuple(similar_course_codes)
 
   def load_similar_courses_from_db():
