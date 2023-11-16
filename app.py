@@ -114,9 +114,8 @@ def remove_rating(course_code):
 def clicked_course(course_code):
     data = request.form
     session_id = session.get('session_id')
-    results_ai = session.get('results_ai', [])
     add_click_to_db(session_id, course_code, data)
-    return redirect(url_for('show_course', course_code=course_code, results_ai=results_ai))
+    return redirect(url_for('show_course', course_code=course_code))
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
