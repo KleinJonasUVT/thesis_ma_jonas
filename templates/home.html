@@ -168,9 +168,6 @@
       </div>
     </div>
   </div>
-  {% if last_viewed_courses %}
-    {% include 'last_viewed.html' %}
-  {% endif %}
   <div class="container">
     <div class="row">
       <h3><b>Recommended courses <span style="color: #ACBED8;">for you!</span></b></h3>
@@ -184,6 +181,9 @@
         <p>Explore our diverse course offerings and as you interact with our content, <b><span style="color: #986B23;">personalized recommendations</span></b> will be crafted just for you! You can also search for courses in the search bar by <b><span style="color: #986B23;">topic</span></b>, <b><span style="color: #986B23;">title</span></b>, <b><span style="color: #986B23;">course code</span></b> or <b><span style="color: #986B23;">lecturer</span></b>.</p>
       </div>
     </div>
+  {% endif %}
+  {% if last_viewed_courses %}
+    {% include 'last_viewed.html' %}
   {% endif %}
   {% include 'explore.html' %}
 </body>
