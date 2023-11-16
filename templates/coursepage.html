@@ -183,7 +183,7 @@
         <b>ECTS: </b>{{ course['ECTS'] }} <br>
         <b>School: </b>{{ course['school'] }} <br>
         <b>Block: </b>{{ course['block'] }}</p>
-        <h5><b>Recommended!</b></h5>
+        <h5><b><span style="color: #986B23;">Recommended!</span></b></h5>
         <form method="POST" action="/course/{{ used_courses[0]['course_code'] }}/clicked" id="courseForm-{{ used_courses[0]['course_code'] }}">
           <a href="#" class="card" onclick="document.getElementById('courseForm-{{ used_courses[0]['course_code'] }}').submit(); return false;">
               <div class="card-body">
