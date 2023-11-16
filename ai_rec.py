@@ -130,7 +130,7 @@ def print_recommendations_from_strings():
     # get indices of nearest neighbors (function from embeddings_utils.py)
     indices_of_nearest_neighbors_1 = indices_of_nearest_neighbors_from_distances(distances)
     indices_of_nearest_neighbors_1 = [index for index in indices_of_nearest_neighbors_1 if index not in last_viewed_indices_set]
-    indices_of_5_nearest_neighbors_1 = indices_of_nearest_neighbors_1[:5]
+    indices_of_5_nearest_neighbors_1 = indices_of_nearest_neighbors_1[:9]
 
     course_codes_of_nearest_neighbors_1 = [course_codes[i] for i in indices_of_5_nearest_neighbors_1]
 
