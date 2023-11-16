@@ -183,16 +183,47 @@
         <b>ECTS: </b>{{ course['ECTS'] }} <br>
         <b>School: </b>{{ course['school'] }} <br>
         <b>Block: </b>{{ course['block'] }}</p>
+        <form method="POST" action="/course/{{ course['course_code'] }}/clicked" id="courseForm-{{ course['course_code'] }}">
+          <a href="#" class="card" onclick="document.getElementById('courseForm-{{ course['course_code'] }}').submit(); return false;">
+              <div class="card-body">
+                  <div class="course-header">
+                      <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
+                  </div>
+                  <p class="course-details">
+                      {% if course['content'] | length > 250 %}
+                          {{ course['content'][:250] }}...
+                      {% else %}
+                          {{ course['content'] }}
+                      {% endif %}
+                  </p>
+                  <input type="hidden" name="activity" value="clicked" />
+                  {% if course in results_ai and search %}
+                  <input type="hidden" name="algorithm" value="openai" />
+                  <input type="hidden" name="place" value="search" />
+                  {% elif course in results_keyword and search %}
+                  <input type="hidden" name="algorithm" value="keyword" />
+                  <input type="hidden" name="place" value="search" />
+                  {% elif course in openai_courses and recommendation %}
+                  <input type="hidden" name="algorithm" value="openai" />
+                  <input type="hidden" name="place" value="recommendations" />
+                  {% elif course in content_based_courses and recommendation %}
+                  <input type="hidden" name="algorithm" value="tfidf" />
+                  <input type="hidden" name="place" value="recommendations" />
+                  {% elif course in random_courses %}
+                  <input type="hidden" name="algorithm" value="random" />
+                  <input type="hidden" name="place" value="random" />
+                  {% elif course in last_viewed_courses %}
+                  <input type="hidden" name="algorithm" value="last_viewed" />
+                  <input type="hidden" name="place" value="last_viewed" />
+                  {% elif favorite %}
+                  <input type="hidden" name="algorithm" value="favorite" />
+                  <input type="hidden" name="place" value="favorite" />
+                  {% endif %}
+              </div>
+          </a>
+      </form>      
       </div>
     </div>
-    <div class="container">
-      <div class="row mt-4">
-        <div class="col-12">
-          <h3><b>Recommended courses <span style="color: #ACBED8;">for you!</span></b></h3>
-        </div>
-      </div>
-    </div>
-    <div class="col-12">{% include 'ai_rec.html' %}</div>
     
     {% include 'footer.html' %}
   </div>
