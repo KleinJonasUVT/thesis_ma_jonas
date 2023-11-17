@@ -12,13 +12,6 @@ app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
 
 @app.route("/")
 def landing():
-    if 'session_id' not in session:
-        session['session_id'] = secrets.token_hex(16)
-    session_id = session.get('session_id')
-    return render_template('welcome.html')
-
-@app.route("/home")
-def home():
     # Check if 'used_courses' and 'num_used_courses' are already in the session
     user_agent = request.headers.get('User-Agent')
     device = httpagentparser.detect(user_agent)
@@ -26,6 +19,13 @@ def home():
     print(f"Device: {device}")
     if 'mobile' in user_agent.lower():
         return render_template('mobile_error.html')
+    if 'session_id' not in session:
+        session['session_id'] = secrets.token_hex(16)
+    session_id = session.get('session_id')
+    return render_template('welcome.html')
+
+@app.route("/home")
+def home():
     if 'algorithm_type' not in session or not session['algorithm_type']:
         algorithm_type = random.choice(['openai', 'tfidf'])
         session['algorithm_type'] = algorithm_type
