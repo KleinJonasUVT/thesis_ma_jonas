@@ -219,7 +219,6 @@
             <div class="carousel-inner">
               {% for course in used_courses %}
                 <div class="carousel-item {% if loop.first %}active{% endif %}">
-                  {% include 'star.html' %}
                   {% include 'courseitem.html' %}
                 </div>
               {% endfor %}
