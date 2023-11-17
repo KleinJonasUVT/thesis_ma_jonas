@@ -55,7 +55,6 @@ cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)
 course_codes = courses_df['course_code']
 # Create a DataFrame from the cosine_sim matrix
 cosine_sim_df = pd.DataFrame(cosine_sim, index=course_codes, columns=course_codes)
-print(cosine_sim_df)
 
 # Create an empty dictionary to store the similar courses
 similar_courses_dict = {}
