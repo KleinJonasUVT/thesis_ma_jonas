@@ -22,6 +22,8 @@ def home():
     # Check if 'used_courses' and 'num_used_courses' are already in the session
     user_agent = request.headers.get('User-Agent')
     device = httpagentparser.detect(user_agent)
+    print(user_agent)
+    print(device)
     if 'mobile' in device['platform']['name'].lower():
         return render_template('mobile_error.html')
     if 'algorithm_type' not in session or not session['algorithm_type']:
