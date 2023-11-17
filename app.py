@@ -24,7 +24,7 @@ def home():
     device = httpagentparser.detect(user_agent)
     print(f"User agent: {user_agent}")
     print(f"Device: {device}")
-    if 'mobile' in device['platform']['name'].lower():
+    if 'mobile' in user_agent.lower():
         return render_template('mobile_error.html')
     if 'algorithm_type' not in session or not session['algorithm_type']:
         algorithm_type = random.choice(['openai', 'tfidf'])
