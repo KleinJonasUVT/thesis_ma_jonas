@@ -1,5 +1,5 @@
 <form method="POST" action="/course/{{ course['course_code'] }}/clicked" id="courseForm-{{ course['course_code'] }}">
-    <a href="#" class="card" onclick="document.getElementById('courseForm-{{ course['course_code'] }}').submit(); return false;">
+    <a href="/course/{{ course['course_code'] }}" class="card" onclick="document.getElementById('courseForm-{{ course['course_code'] }}').submit(); return false;">
         <div class="card-body">
             <div class="course-header">
                 <h5 class="card-title"><b>{{ course['course_name'] }}</b></h5>
