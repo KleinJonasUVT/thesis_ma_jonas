@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Submitted survey</title>
+    {% include 'bootstrap.html' %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            margin-bottom: 50px;
+        }
+      
+        .center-object {
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           margin-block: 20px;
+        }
+
+        #TiU_logo {
+           margin-top: 20px;
+           margin-bottom: 20px;
+           width: 40%;
+           max-width: 100%;
+           height: auto;
+        }
+
+      #TiU_photo {
+        width: auto;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+      }
+
+        .card {
+          text-align: center;
+          border: 2px solid #986B23;
+          width: 80%;
+          background-color: #006094
+        }
+
+        .custom-crd {
+          background-color: #F2D398;
+          border: 2px solid #986B23;
+          color: black;
+          width: 100%;
+          margin-top: 25px;
+        }
+
+        .custom-btn {
+            background-color: #006094;
+            border: 2px solid #986B23;
+            color: #006094;
+            width: 100%;
+          }
+  
+        p {
+          font-size: 20px;
+          margin-top: 20px;
+        }
+
+        li {
+          font-size: 20px;
+        }
+
+        i {
+          font-size: 15px;
+          margin-block: 20px;
+          margin-right: 10px;
+        }
+        
+        .custom-btn {
+          padding: 10px 25px; /* Adjust this as per your need */
+          border: 2px solid #000;
+          font-family: 'Lato', sans-serif;
+          font-weight: 500;
+          background: transparent;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          position: relative;
+          display: inline-flex; /* Use flexbox for alignment */
+          align-items: center;  /* Vertically align content */
+          justify-content: center; /* Horizontally center content */
+          border-radius: 5px;
+          margin-block: 10px;
+        }
+        
+        .custom-crd {
+            transition: all 0.3s ease;
+        }
+        
+        .custom-crd:hover {
+            box-shadow:
+            -7px -7px 20px 0px #fff9,
+            -4px -4px 5px 0px #fff9,
+            7px 7px 20px 0px #0002,
+            4px 4px 5px 0px #0001;
+            font-weight: bold;
+        }
+
+        .btn-container {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          position: relative;
+        }
+
+        .custom-btn.btn-1:first-child {
+          margin-right: 10px;  /* Adjust the value as needed for desired spacing */
+        }
+      
+        a, a:hover, a:focus, a:active {
+          text-decoration: none;
+          color: inherit;
+          outline: none;
+        }
+
+      .course-text {
+        font-weight: bold;
+        font-size: 24px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1; 
+      }
+
+      .row {
+        margin-left: 100px;
+        margin-right: 100px;
+      }
+    </style>
+</head>
+<body>
+<div id="banner">
+    <div class="row center-object">
+        <img class="img-fluid" id="TiU_logo" src="/static/thesis_logo.jpg" alt="TiU Logo">
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-instructions">
+            <p><b><span style="color: #986B23;">Thank you</span></b> for filling out our survey!</p>
+            <p>This will greatly help us <b><span style="color: #986B23;">improve</span></b> our website!</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
