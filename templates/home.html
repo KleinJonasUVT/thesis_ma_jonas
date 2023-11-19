@@ -199,19 +199,19 @@
   {% endif %}
   {% include 'explore.html' %}
 </body>
-<footer class="footer mt-auto py-3 bg-body-tertiary">
+<footer class="footer fixed-bottom mt-auto py-3 bg-body-tertiary">
   <div class="container">
     <span class="text-body-secondary">
-      Try finding 5 courses that interest you and give these courses a star! You currently have {{ num_last_viewed_courses }}/5 favorited courses.
-      {% if num_last_viewed_courses < 5 %}
+      Try finding 5 courses that interest you and give these courses a star! You currently have {{ num_favorite_courses }}/5 favorited courses.
+      {% if num_favorite_courses < 5 %}
         <button class="btn btn-primary d-inline-flex align-items-center" type="button" disabled>
           Submit
           <svg class="bi ms-1" width="20" height="20"><use xlink:href="#arrow-right-short"/></svg>
         </button>
       {% else %}
-        <button class="btn btn-primary d-inline-flex align-items-center" type="button">
-          Submit
-          <svg class="bi ms-1" width="20" height="20"><use xlink:href="#arrow-right-short"/></svg>
+        <button type="button" class="btn btn-primary"
+        style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+        Submit survey
         </button>
       {% endif %}
     </span>
