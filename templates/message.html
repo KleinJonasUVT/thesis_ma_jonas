@@ -1,16 +1,16 @@
 <footer class="footer fixed-bottom mt-auto py-3 bg-body-tertiary">
     <div class="container d-flex justify-content-center align-items-center">
-    <span class="text-body-secondary">
+    <span class="text-body-secondary" style="margin-bottom: 10px;">
         <b>Try finding 5 courses that interest you and give these courses a star! You currently have {{ num_favorite_courses }}/5 favorited courses</b>
         {% if num_favorite_courses < 5 %}
         <button type="button" class="btn btn-primary"
-        style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+        style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" disabled>
         Submit survey
         </button>
         {% else %}
         <button type="button" class="btn btn-primary"
         style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-        <a href="/submit" target="_blank">Submit survey</a>
+        <a href="/submit" target="_blank" style="color: white;">Submit survey</a>
         </button>
         {% endif %}
     </span>

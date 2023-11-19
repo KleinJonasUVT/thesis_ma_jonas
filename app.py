@@ -91,16 +91,18 @@ def show_course(course_code):
     courses = load_courses_from_db()
     course = [course for course in courses if course.get('course_code') == course_code]
     favorite_courses = load_favorite_courses_from_db()
+    num_favorite_courses = len(favorite_courses)
     results_ai = session.get('results_ai', [])
     if not course:
         return "Not Found", 404
     else:
-        return render_template('coursepage.html', recommendation=True, course=course[0], favorite_courses=favorite_courses, results_ai=results_ai, openai_courses=openai_courses, content_based_courses=content_based_courses, used_courses=used_courses, num_used_courses=num_used_courses)
+        return render_template('coursepage.html', num_favorite_courses=num_favorite_courses, recommendation=True, course=course[0], favorite_courses=favorite_courses, results_ai=results_ai, openai_courses=openai_courses, content_based_courses=content_based_courses, used_courses=used_courses, num_used_courses=num_used_courses)
 
 @app.route('/favourites')
 def favorite_courses():
     favorite_courses = load_favorite_courses_from_db()
-    return render_template('favourites.html', favorite_courses=favorite_courses, favorite=True)
+    num_favorite_courses = len(favorite_courses)
+    return render_template('favourites.html', favorite_courses=favorite_courses, num_favorite_courses=num_favorite_courses, favorite=True)
 
 @app.route("/course/<course_code>/rating", methods=['POST'])
 def rating_course(course_code):
@@ -159,7 +161,10 @@ def search():
     if len(list2) > min_length:
         total_results.extend(list2[min_length:])
 
-    return render_template('search.html', query=query, results=total_results, results_ai=results_ai, results_keyword=results_keyword, search=True)
+    favorite_courses = load_favorite_courses_from_db()
+    num_favorite_courses = len(favorite_courses)
+
+    return render_template('search.html', num_favorite_courses=num_favorite_courses, query=query, results=total_results, results_ai=results_ai, results_keyword=results_keyword, search=True)
 
 @app.route("/disclaimer")
 def disclaimer():
