@@ -6,6 +6,11 @@
       margin: 50px;
     }
 
+    div.container{
+      margin-top: 60px;
+      margin-bottom: 50px;
+    }
+
     .footer {
       margin-top: 20px;
     }
@@ -165,9 +170,9 @@
 <body>
   {% include 'navbar.html' %}
   <div class="container">
-    <div class="row d-flex justify-content-center" style="margin-top: 60px margin-bottom: 50px;">
+    <div class="row d-flex justify-content-center">
       <div class="course-header">
-        <h3 style="margin-right: 30px;"><b>{{ course['course_name'] }}</b></h3>
+        <h3 style="margin-right: 30px"><b>{{ course['course_name'] }}</b></h3>
         {% if course in favorite_courses %}
           <form action="/course/{{ course['course_code'] }}/remove_rating" method="post">
               <input type="hidden" name="activity" value="unfavorited">
@@ -233,6 +238,7 @@
           </div>
       </div>
     </div>
+  </div>
     {% include 'message.html' %}
     {% include 'footer.html' %}
   </div>
