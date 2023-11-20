@@ -168,8 +168,8 @@
 </head>
 <body>
   {% include 'navbar.html' %}
-  <div class="container d-flex justify-content-center">
-    <div class="row mt-4">
+  <div class="container">
+    <div class="row d-flex justify-content-center">
       <div class="course-header">
         <h3 style="margin-right: 30px;"><b>{{ course['course_name'] }}</b></h3>
         {% if course in favorite_courses %}
