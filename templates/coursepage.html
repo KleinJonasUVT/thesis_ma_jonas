@@ -8,7 +8,7 @@
 
     div.container{
       margin-top: 60px;
-      margin-bottom: 50px;
+      margin-bottom: 20px;
     }
 
     .footer {
@@ -170,7 +170,7 @@
 <body>
   {% include 'navbar.html' %}
   <div class="container">
-    <div class="row d-flex justify-content-center">
+    <div class="row d-flex justify-content-center" style="margin-left: 5px;">
       <div class="course-header">
         <h3 style="margin-right: 30px"><b>{{ course['course_name'] }}</b></h3>
         {% if course in favorite_courses %}
@@ -215,7 +215,7 @@
         <b>Block: </b>{{ course['block'] }}</p>
     </div>
     <div class="row d-flex justify-content-center">
-      <h3><b>Recommended courses <span style="color: #ACBED8;">for you!</span></b></h3>
+      <h3 style="margin-top: 30px"><b>Recommended courses <span style="color: #ACBED8;">for you!</span></b></h3>
       {% include 'ai_rec.html' %}
     </div>
   </div>
