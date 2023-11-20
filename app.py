@@ -57,7 +57,8 @@ def home():
     # Check algorithm when going to homepage
     session_id = session.get('session_id')
     
-    add_home_click_to_db(session_id, algorithm_type)
+    if 'algorithm_type' not in session or not session['algorithm_type']:
+        add_home_click_to_db(session_id, algorithm_type)
 
     # Filter random_courses as per your existing logic
     random_courses = [course for course in random_courses if course['course_code'] not in used_courses]
