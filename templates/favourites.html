@@ -129,14 +129,20 @@
       .footer {
         margin-top: 20px;
       }
+
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
     </style>
 </head>
 <body>
   {% include 'navbar.html' %}
 <div class="container">
   <div class="row">
-    <div class="col-12 left">
-      <h3><b>Your <span style="color: #ACBED8;">Favourites!</span></b></h3>
+    <div class="header-container">
+      <h3><b>Your <span style="color: #ACBED8;">Favourites!</span></b></h3><a class="custom-text" href="/clear_session"><i class="fa-solid fa-trash-can" style="color: #acacac;"></i></a>
     </div>
   </div>
   <div class="row">
