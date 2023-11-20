@@ -1,3 +1,17 @@
+<style>
+    #myButton {
+    position: relative;
+    }
+
+    #fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #0e6fdd; /* Choose your fill color */
+    height: 100%;
+    }
+</style>
+
 <footer class="footer fixed-bottom mt-auto py-3 bg-body-tertiary">
     <div class="submitting d-flex justify-content-center align-items-center">
     <span class="text-body-secondary" style="margin-bottom: 10px; margin-top: 10px;">
@@ -5,6 +19,7 @@
         {% if num_favorite_courses < 5 %}
         <button type="button" class="btn btn-primary"
         style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; background-color: lightgray" disabled>
+        <div id="fill" style="background-color: #0e6fdd; height: 100%; width: {{ num_favorite_courses * 20 }}%;"></div>
         Submit survey
         </button>
         {% else %}
