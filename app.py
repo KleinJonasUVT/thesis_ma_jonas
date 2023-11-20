@@ -63,7 +63,7 @@ def home():
 @app.route('/clear_session')
 def clear_session():
     session.clear()  # This clears the session
-    return redirect(url_for('home'))
+    return redirect(url_for('favorite_courses'))
 
 @app.route("/api/courses")
 def list_courses():
