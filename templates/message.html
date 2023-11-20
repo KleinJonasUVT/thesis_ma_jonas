@@ -3,12 +3,12 @@
     <span class="text-body-secondary" style="margin-bottom: 10px; margin-top: 10px;">
         <b>Try finding 5 courses that interest you and give these courses a star! You currently have {{ num_favorite_courses }}/5 favorited courses. Progress:</b>
         {% if num_favorite_courses < 5 %}
-        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="margin-top: 10px;">
             <div class="progress-bar" style="width: {{ num_favorite_courses * 20 }}%">{{ num_favorite_courses * 20 }}%</div>
         </div>
         {% else %}
-        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar" style="width: 100%"><a href="/submit" target="_blank">Submit survey</a></div>
+        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"  style="margin-top: 10px;"">
+            <div class="progress-bar" style="width: 100%"><a href="/submit" target="_blank" style="color: white;">Submit survey <i class="fa-solid fa-arrow-right-long fa-xs" style="color: #ffffff;"></i></a></div>
         </div>
         {% endif %}
     </span>
