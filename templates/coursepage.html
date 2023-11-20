@@ -6,9 +6,13 @@
       margin: 50px;
     }
 
-    div.container{
+    div.coursepage{
       margin-top: 60px;
       margin-bottom: 20px;
+    }
+
+    .container{
+      margin-top: 10px;
     }
 
     .footer {
@@ -169,7 +173,7 @@
 </head>
 <body>
   {% include 'navbar.html' %}
-  <div class="container">
+  <div class="container coursepage">
     <div class="row d-flex justify-content-center" style="margin-left: 5px;">
       <div class="course-header">
         <h3 style="margin-right: 30px"><b>{{ course['course_name'] }}</b></h3>
@@ -215,7 +219,7 @@
         <b>Block: </b>{{ course['block'] }}</p>
     </div>
     <div class="row d-flex justify-content-center">
-      <h3 style="margin-top: 30px"><b>Recommended courses <span style="color: #ACBED8;">for you!</span></b></h3>
+      <h3 style="margin-top: 40px"><b>Recommended courses <span style="color: #ACBED8;">for you!</span></b></h3>
       {% include 'ai_rec.html' %}
     </div>
   </div>
