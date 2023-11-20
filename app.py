@@ -54,6 +54,11 @@ def home():
     favorite_courses = load_favorite_courses_from_db()
     num_favorite_courses = len(favorite_courses)
 
+    # Check algorithm when going to homepage
+    session_id = session.get('session_id')
+    
+    add_home_click_to_db(session_id, algorithm_type)
+
     # Filter random_courses as per your existing logic
     random_courses = [course for course in random_courses if course['course_code'] not in used_courses]
 

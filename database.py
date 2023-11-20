@@ -131,6 +131,18 @@ def add_click_to_db(session_id, course_code, data):
           {"session_id": session_id, "time": time, "course_code": course_code, "activity": activity, "algorithm": algorithm, "place": place}
       )
 
+def add_home_click_to_db(session_id, algorithm):
+  time = datetime.now(pytz.timezone('Europe/Amsterdam'))
+  activity = 'home'
+  course_code = 'none'
+  place = 'home'
+
+  with engine.connect() as conn:
+      conn.execute(
+          text("INSERT INTO sessions (ID, timestamp, course_code, activity, algorithm, place) VALUES (:session_id, :time, :course_code, :activity, :algorithm, :place)"),
+          {"session_id": session_id, "time": time, "course_code": course_code, "activity": activity, "algorithm": algorithm, "place": place}
+      )
+
 def search_courses_from_db(query):
   with engine.connect() as conn:
       result = conn.execute(
