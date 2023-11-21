@@ -130,7 +130,7 @@ def rating_course(course_code):
     add_random_favorite_to_db(course_code)
 
   found_last_viewed = False
-  for last_viewed_course_code in random_course_codes:
+  for last_viewed_course_code in last_viewed_course_codes:
     if last_viewed_course_code == course_code:
         found_last_viewed = True
         break
