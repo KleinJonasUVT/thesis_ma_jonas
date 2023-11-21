@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request, redirect, session, url_for, make_response
 from datetime import datetime, timedelta
 import secrets
-from database import load_courses_from_db, load_random_courses_from_db, load_last_viewed_courses_from_db, load_favorite_courses_from_db, add_click_to_db, search_courses_from_db, add_home_click_to_db
+from database import load_courses_from_db, load_random_courses_from_db, load_last_viewed_courses_from_db, load_favorite_courses_from_db, add_click_to_db, search_courses_from_db, add_home_click_to_db, add_random_favorite_to_db, add_last_viewed_favorite_to_db
 from ai_rec import print_recommendations_from_strings, ai_search_results
 from content_based import get_content_based_courses
 import random
@@ -52,8 +52,10 @@ def home():
     
     # Your existing code for session_id, random_courses, etc. remains unchanged
     random_courses = load_random_courses_from_db()
+    session['random_courses'] = random_courses
     num_random_courses = len(random_courses)
     last_viewed_courses = load_last_viewed_courses_from_db()
+    session['last_viewed_courses'] = last_viewed_courses
     num_last_viewed_courses = len(last_viewed_courses)
     favorite_courses = load_favorite_courses_from_db()
     num_favorite_courses = len(favorite_courses)
@@ -113,8 +115,23 @@ def rating_course(course_code):
   data = request.form
   session_id = session.get('session_id')
   add_click_to_db(session_id, course_code, data)
-  random_courses = load_random_courses_from_db()
-  last_viewed_courses = load_last_viewed_courses_from_db()
+  random_courses = session.get('random_courses')
+  last_viewed_courses = session.get('last_viewed_courses')
+  found_random = False
+  for course in random_courses:
+    if course['course_code'] == course_code:
+        found_random = True
+        break
+  if found_random:
+    add_random_favorite_to_db()
+
+  found_last_viewed = False
+  for course in last_viewed_courses:
+    if course['course_code'] == course_code:
+        found_last_viewed = True
+        break
+  if found_last_viewed:
+    add_last_viewed_favorite_to_db()
 
   previous_page = request.referrer
   return redirect(previous_page)
