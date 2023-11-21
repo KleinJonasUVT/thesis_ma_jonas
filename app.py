@@ -102,6 +102,8 @@ def show_course(course_code):
     if previous_click:
         last_algorithm = previous_click['algorithm']
         last_place = previous_click['place']
+    print(f"last_algorithm: {last_algorithm}")
+    print(f"last_place: {last_place}")
     if not course:
         return "Not Found", 404
     else:
