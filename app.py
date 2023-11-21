@@ -52,10 +52,12 @@ def home():
     
     # Your existing code for session_id, random_courses, etc. remains unchanged
     random_courses = load_random_courses_from_db()
-    session['random_courses'] = random_courses
+    random_course_codes = [course['course_code'] for course in random_courses]
+    session['random_course_codes'] = random_course_codes
     num_random_courses = len(random_courses)
     last_viewed_courses = load_last_viewed_courses_from_db()
-    session['last_viewed_courses'] = last_viewed_courses
+    last_viewed_course_codes = [course['course_code'] for course in last_viewed_courses]
+    session['last_viewed_course_codes'] = last_viewed_course_codes
     num_last_viewed_courses = len(last_viewed_courses)
     favorite_courses = load_favorite_courses_from_db()
     num_favorite_courses = len(favorite_courses)
@@ -115,10 +117,12 @@ def rating_course(course_code):
   data = request.form
   session_id = session.get('session_id')
   add_click_to_db(session_id, course_code, data)
-  random_courses = session.get('random_courses')
-  last_viewed_courses = session.get('last_viewed_courses')
+  random_course_codes = session.get('random_course_codes')
+  print(random_course_codes)
+  last_viewed_course_codes = session.get('last_viewed_course_codes')
+  print(last_viewed_course_codes)
   found_random = False
-  for course in random_courses:
+  for course in random_course_codes:
     if course['course_code'] == course_code:
         found_random = True
         break
@@ -126,7 +130,7 @@ def rating_course(course_code):
     add_random_favorite_to_db()
 
   found_last_viewed = False
-  for course in last_viewed_courses:
+  for course in last_viewed_course_codes:
     if course['course_code'] == course_code:
         found_last_viewed = True
         break
