@@ -153,7 +153,7 @@ def get_previous_click():
           SELECT algorithm, place FROM sessions
           WHERE ID = :session_id
           ORDER BY timestamp DESC 
-          LIMIT 1;
+          LIMIT 1,1;
           """),
           {"session_id": session_id}
       )
