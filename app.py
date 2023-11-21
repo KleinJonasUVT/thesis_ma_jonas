@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify, request, redirect, session, url_for, make_response
 from datetime import datetime, timedelta
 import secrets
-from database import load_courses_from_db, load_random_courses_from_db, load_last_viewed_courses_from_db, load_favorite_courses_from_db, add_click_to_db, search_courses_from_db, add_home_click_to_db, get_previous_click
+from database import load_courses_from_db, load_random_courses_from_db, load_last_viewed_courses_from_db, load_favorite_courses_from_db, add_click_to_db, search_courses_from_db, add_home_click_to_db
 from ai_rec import print_recommendations_from_strings, ai_search_results
 from content_based import get_content_based_courses
 import random
@@ -31,10 +31,9 @@ def home():
     session_id = session.get('session_id')
 
     if 'algorithm_type' not in session or not session['algorithm_type']:
-        add_home_click_to_db()
         algorithm_type = random.choice(['openai', 'tfidf'])
         session['algorithm_type'] = algorithm_type
-        add_home_click_to_db()
+    
     else:
         algorithm_type = session.get('algorithm_type')
 
@@ -48,6 +47,8 @@ def home():
         content_based_courses = get_content_based_courses()
         used_courses = content_based_courses
         num_used_courses = len(used_courses)
+
+    add_home_click_to_db()
     
     # Your existing code for session_id, random_courses, etc. remains unchanged
     random_courses = load_random_courses_from_db()
@@ -96,14 +97,6 @@ def show_course(course_code):
     favorite_courses = load_favorite_courses_from_db()
     num_favorite_courses = len(favorite_courses)
     results_ai = session.get('results_ai', [])
-    previous_click = get_previous_click()
-    last_algorithm = 'random'
-    last_place = 'random'
-    if previous_click:
-        last_algorithm = previous_click['algorithm']
-        last_place = previous_click['place']
-    print(f"last_algorithm: {last_algorithm}")
-    print(f"last_place: {last_place}")
     if not course:
         return "Not Found", 404
     else:
@@ -120,6 +113,9 @@ def rating_course(course_code):
   data = request.form
   session_id = session.get('session_id')
   add_click_to_db(session_id, course_code, data)
+  random_courses = load_random_courses_from_db()
+  last_viewed_courses = load_last_viewed_courses_from_db()
+
   previous_page = request.referrer
   return redirect(previous_page)
 

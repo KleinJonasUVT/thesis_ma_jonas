@@ -145,26 +145,6 @@ def add_home_click_to_db():
           {"session_id": session_id, "time": time, "course_code": course_code, "activity": activity, "algorithm": algorithm, "place": place}
       )
 
-def get_previous_click():
-  with engine.connect() as conn:
-      session_id = session.get("session_id")
-      result = conn.execute(
-          text("""
-          SELECT algorithm, place FROM sessions
-          WHERE ID = :session_id
-          ORDER BY timestamp DESC 
-          LIMIT 1,1;
-          """),
-          {"session_id": session_id}
-      )
-      action = []
-      columns = result.keys()
-      for row in result:
-          result_dict = {column: value for column, value in zip(columns, row)}
-          action.append(result_dict)
-          action = action[0]
-      return action
-
 def search_courses_from_db(query):
   with engine.connect() as conn:
       result = conn.execute(
