@@ -127,7 +127,7 @@ def rating_course(course_code):
         found_random = True
         break
   if found_random:
-    add_random_favorite_to_db()
+    add_random_favorite_to_db(course_code)
 
   found_last_viewed = False
   for last_viewed_course_code in random_course_codes:
@@ -135,7 +135,7 @@ def rating_course(course_code):
         found_last_viewed = True
         break
   if found_last_viewed:
-    add_last_viewed_favorite_to_db()
+    add_last_viewed_favorite_to_db(course_code)
 
   previous_page = request.referrer
   return redirect(previous_page)
