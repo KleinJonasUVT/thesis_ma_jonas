@@ -26,9 +26,15 @@ def landing():
 
 @app.route("/home")
 def home():
+    if 'session_id' not in session:
+        session['session_id'] = secrets.token_hex(16)
+    session_id = session.get('session_id')
+
     if 'algorithm_type' not in session or not session['algorithm_type']:
+        add_home_click_to_db()
         algorithm_type = random.choice(['openai', 'tfidf'])
         session['algorithm_type'] = algorithm_type
+        add_home_click_to_db()
     else:
         algorithm_type = session.get('algorithm_type')
 
@@ -44,20 +50,12 @@ def home():
         num_used_courses = len(used_courses)
     
     # Your existing code for session_id, random_courses, etc. remains unchanged
-    if 'session_id' not in session:
-        session['session_id'] = secrets.token_hex(16)
-    session_id = session.get('session_id')
     random_courses = load_random_courses_from_db()
     num_random_courses = len(random_courses)
     last_viewed_courses = load_last_viewed_courses_from_db()
     num_last_viewed_courses = len(last_viewed_courses)
     favorite_courses = load_favorite_courses_from_db()
     num_favorite_courses = len(favorite_courses)
-
-    # Check algorithm when going to homepage
-    
-    if 'algorithm_type' not in session or not session['algorithm_type']:
-        add_home_click_to_db()
 
     # Filter random_courses as per your existing logic
     random_courses = [course for course in random_courses if course['course_code'] not in used_courses]
