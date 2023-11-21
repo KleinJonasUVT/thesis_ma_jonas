@@ -131,8 +131,10 @@ def add_click_to_db(session_id, course_code, data):
           {"session_id": session_id, "time": time, "course_code": course_code, "activity": activity, "algorithm": algorithm, "place": place}
       )
 
-def add_home_click_to_db(session_id, algorithm):
+def add_home_click_to_db():
+  session_id = session.get("session_id")
   time = datetime.now(pytz.timezone('Europe/Amsterdam'))
+  algorithm = session.get("algorithm_type")
   activity = 'home'
   course_code = 'none'
   place = 'home'
