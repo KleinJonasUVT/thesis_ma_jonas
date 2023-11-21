@@ -147,6 +147,7 @@ def add_home_click_to_db():
 
 def get_previous_click():
   with engine.connect() as conn:
+      session_id = session.get("session_id")
       result = conn.execute(
           text("""
           SELECT algorithm, place FROM sessions
@@ -154,7 +155,7 @@ def get_previous_click():
           ORDER BY timestamp DESC 
           LIMIT 1;
           """),
-          {"session_id": "b70981cd6b786b03d8594c4e093fdf87"}
+          {"session_id": session_id}
       )
       action = []
       columns = result.keys()
