@@ -122,16 +122,16 @@ def rating_course(course_code):
   last_viewed_course_codes = session.get('last_viewed_course_codes')
   print(last_viewed_course_codes)
   found_random = False
-  for course in random_course_codes:
-    if course['course_code'] == course_code:
+  for random_course_code in random_course_codes:
+    if random_course_code == course_code:
         found_random = True
         break
   if found_random:
     add_random_favorite_to_db()
 
   found_last_viewed = False
-  for course in last_viewed_course_codes:
-    if course['course_code'] == course_code:
+  for last_viewed_course_code in random_course_codes:
+    if last_viewed_course_code == course_code:
         found_last_viewed = True
         break
   if found_last_viewed:
