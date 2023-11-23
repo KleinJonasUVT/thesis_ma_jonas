@@ -16,8 +16,7 @@ def landing():
     user_agent = request.headers.get('User-Agent')
     device = httpagentparser.detect(user_agent)
     print(f"User agent: {user_agent}")
-    print(f"Device: {device}")
-    if 'mobile' in user_agent.lower():
+    if 'mobile' in user_agent.lower() and 'ipad' not in user_agent.lower()::
         return render_template('mobile_error.html')
     if 'session_id' not in session:
         session['session_id'] = secrets.token_hex(16)
