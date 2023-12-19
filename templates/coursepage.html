@@ -5,9 +5,19 @@
     body {
       margin: 50px;
     }
-    
-    .container {
-      margin: 50px;
+
+    div.coursepage{
+      margin-top: 60px;
+      margin-bottom: 20px;
+    }
+
+    .container{
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .footer {
+      margin-top: 20px;
     }
 
     .star-button {
@@ -164,10 +174,10 @@
 </head>
 <body>
   {% include 'navbar.html' %}
-  <div class="container">
-    <div class="row mt-4">
+  <div class="container coursepage">
+    <div class="row d-flex justify-content-center" style="margin-left: 5px;">
       <div class="course-header">
-        <h3 style="margin-right: 30px;"><b>{{ course['course_name'] }}</b></h3>
+        <h3 style="margin-right: 30px"><b>{{ course['course_name'] }}</b></h3>
         {% if course in favorite_courses %}
           <form action="/course/{{ course['course_code'] }}/remove_rating" method="post">
               <input type="hidden" name="activity" value="unfavorited">
@@ -208,33 +218,13 @@
         <b>Degree: </b>{{ course['Degree'] }} <br>
         <b>ECTS: </b>{{ course['ECTS'] }} <br>
         <b>Block: </b>{{ course['block'] }}</p>
-        <h5><b>Recommended <span style="color: #ACBED8;">for you!</span></b></h5>
-          <div id="carousel_random" class="carousel slide col-12">
-            <div class="carousel-indicators">
-              {% for i in range(num_used_courses) %}
-                <button type="button" data-bs-target="#carousel_random" data-bs-slide-to="{{ i }}" {% if loop.first %}class="active" aria-current="true"{% endif %} aria-label="Slide {{ i + 1 }}"></button>
-              {% endfor %}
-            </div>
-            <div class="carousel-inner">
-              {% for course in used_courses %}
-                <div class="carousel-item {% if loop.first %}active{% endif %}">
-                  {% include 'courseitem.html' %}
-                </div>
-              {% endfor %}
-              <button class="carousel-control-prev" type="button" data-bs-target="#carousel_random" data-bs-slide="prev">
-                <i class="fa-solid fa-chevron-left" style="color: #986B23;"></i>
-                  <span class="visually-hidden">Previous</span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carousel_random" data-bs-slide="next">
-                <i class="fa-solid fa-chevron-right" style="color: #986B23;"></i>
-                  <span class="visually-hidden">Next</span>
-              </button>
-            </div>
-          </div>
-      </div>
     </div>
-    
-    {% include 'footer.html' %}
+    <div class="row d-flex justify-content-center">
+      <h3 style="margin-top: 40px"><b>Recommended courses <span style="color: #ACBED8;">for you!</span></b></h3>
+      {% include 'ai_rec.html' %}
+    </div>
   </div>
+    {% include 'message.html' %}
+    {% include 'footer.html' %}
 </body>
 </html>
