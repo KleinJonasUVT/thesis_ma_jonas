@@ -1,7 +1,7 @@
 # Prototype web application: Course Catalogus Tilburg University
 This repository contains the Python and Flask-based code for the web app developed as part of Jonas Klein's Master's thesis in Marketing Analytics at Tilburg University. The app is a practical implementation to study the efficacy of AI-based embedding techniques, particularly GPT models, versus traditional TF-IDF models in recommendation systems.
 
-# Thesis
+## Thesis
 The thesis, titled "AI-based Embedding Techniques in Recommendation Systems," compares AI-driven recommendations with traditional methods. Using Tilburg University's course catalog as a case study, it explores how these technologies affect the personalization and effectiveness of course recommendations for students.
 
 ## Running this project
