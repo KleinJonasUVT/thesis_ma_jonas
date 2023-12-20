@@ -1,6 +1,8 @@
-# Prototype web application: Osiris Catalogus Tilburg University
-This repository hosts the code for the course catalogue web app prototype from Tilburg University. The primary goal of this project is to revolutionize the way students discover new courses by implementing and testing various recommendation systems and search algorithms. The app is built using Flask in Python.
+# Prototype web application: Course Catalogus Tilburg University
+This repository contains the Python and Flask-based code for the web app developed as part of Jonas Klein's Master's thesis in Marketing Analytics at Tilburg University. The app is a practical implementation to study the efficacy of AI-based embedding techniques, particularly GPT models, versus traditional TF-IDF models in recommendation systems.
 
+# Thesis
+The thesis, titled "AI-based Embedding Techniques in Recommendation Systems," compares AI-driven recommendations with traditional methods. Using Tilburg University's course catalog as a case study, it explores how these technologies affect the personalization and effectiveness of course recommendations for students.
 
 ## Running this project
 
