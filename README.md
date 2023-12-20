@@ -4,6 +4,8 @@ This repository contains the Python and Flask-based code for the web app develop
 ## Thesis
 The thesis, titled "AI-based Embedding Techniques in Recommendation Systems," compares AI-driven recommendations with traditional methods. Using Tilburg University's course catalog as a case study, it explores how these technologies affect the personalization and effectiveness of course recommendations for students.
 
+[AI-based Embedding Techniques in Recommendation Systems](https://github.com/KleinJonasUVT/thesis_ma_jonas/blob/001cac749ba141616eae1089cb4718b453fc4fd7/AI_based_Embedding_Techniques_in_Recommendation_systems%20(46).pdf)
+
 ## Running this project
 
 ### Using Docker
