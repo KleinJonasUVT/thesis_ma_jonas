@@ -2,7 +2,7 @@
 This repository contains the Python and Flask-based code for the web app developed as part of Jonas Klein's Master's thesis in Marketing Analytics at Tilburg University. The app is a practical implementation to study the efficacy of AI-based embedding techniques, particularly GPT models, versus traditional TF-IDF models in recommendation systems.
 
 <div align="center">
-<img src="https://github.com/KleinJonasUVT/thesis_ma_jonas/blob/95bcfc4b240a2e8c525db522d80e2618cd227d21/static/homepage.png" width="800" alt="Homepage">
+<img src="https://github.com/KleinJonasUVT/thesis_ma_jonas/blob/95bcfc4b240a2e8c525db522d80e2618cd227d21/static/homepage.png" width="500" alt="Homepage">
 </div>
 
 ## Thesis
