@@ -11,19 +11,6 @@ app = Flask(__name__)
 app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
 
 @app.route("/")
-def landing():
-    # Check if 'used_courses' and 'num_used_courses' are already in the session
-    user_agent = request.headers.get('User-Agent')
-    device = httpagentparser.detect(user_agent)
-    print(f"User agent: {user_agent}")
-    if 'mobile' in user_agent.lower() and 'ipad' not in user_agent.lower():
-        return render_template('mobile_error.html')
-    if 'session_id' not in session:
-        session['session_id'] = secrets.token_hex(16)
-    session_id = session.get('session_id')
-    return render_template('welcome.html')
-
-@app.route("/home")
 def home():
     if 'session_id' not in session:
         session['session_id'] = secrets.token_hex(16)
