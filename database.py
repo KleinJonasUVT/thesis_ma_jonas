@@ -6,33 +6,22 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import secrets
 import pytz
+import pymysql
 
 # Retrieve variables from environment
-tidb_user = os.getenv('TIDB_USER')
-tidb_password = os.getenv('TIDB_PASSWORD')
-tidb_host = os.getenv('TIDB_HOST')
-tidb_port = int(os.getenv('TIDB_PORT'))  # Port should be an integer
-tidb_db_name = os.getenv('TIDB_DB_NAME')
+db_connection_string = os.environ['DB_CONNECTION_STRING']
 
-def get_db_engine():
-  connect_args = {
-    "ssl_verify_cert": True,
-    "ssl_verify_identity": True,
-    "ssl_ca": '/etc/ssl/cert.pem',
-        }
-  return create_engine(
-        URL.create(
-            drivername="mysql+pymysql",
-            username=tidb_user,
-            password=tidb_password,
-            host=tidb_host,
-            port=tidb_port,
-            database=tidb_db_name,
-        ),
-        connect_args=connect_args,
-    )
+engine = create_engine(
+  db_connection_string,
+  connect_args = {"ssl": {
+      "ssl_ca": "/etc/ssl/cert.pem",
+      "ssl_verify_cert": True,
+      "ssl_verify_identity": True
+    }
+  }
+)
 
-engine = get_db_engine()
+print(engine)
 
 def load_courses_from_db():
   with engine.connect() as conn:
