@@ -2,7 +2,7 @@ Flask
 gunicorn
 sqlalchemy
 pymysql
-PyMySQL
+python-dotenv
 mysqlclient
 pytz
 pandas

@@ -1,21 +1,43 @@
 from flask import session
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, URL
 from sqlalchemy import text
 import os
+from dotenv import load_dotenv
 from datetime import datetime, timedelta
 import secrets
 import pytz
 
-db_connection_string = os.environ['DB_CONNECTION_STRING']
+load_dotenv()
 
-engine = create_engine(
-  db_connection_string,
-  connect_args={
-    "ssl": {
-      "ssl_ca": "/etc/ssl/cert.pem"
-    }
-  }
-)
+# Retrieve variables from environment
+ca_path = os.getenv('CA_PATH')
+tidb_user = os.getenv('TIDB_USER')
+tidb_password = os.getenv('TIDB_PASSWORD')
+tidb_host = os.getenv('TIDB_HOST')
+tidb_port = int(os.getenv('TIDB_PORT'))  # Port should be an integer
+tidb_db_name = os.getenv('TIDB_DB_NAME')
+
+def get_db_engine():
+    connect_args = {}
+    if ca_path:
+        connect_args = {
+            "ssl_verify_cert": True,
+            "ssl_verify_identity": True,
+            "ssl_ca": ca_path,
+        }
+    return create_engine(
+        URL.create(
+            drivername="mysql+pymysql",
+            username=tidb_user,
+            password=tidb_password,
+            host=tidb_host,
+            port=tidb_port,
+            database=tidb_db_name,
+        ),
+        connect_args=connect_args,
+    )
+
+engine = get_db_engine()
 
 def load_courses_from_db():
   with engine.connect() as conn:
