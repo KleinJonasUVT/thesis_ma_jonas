@@ -57,7 +57,7 @@ def load_last_viewed_courses_from_db():
             GROUP BY s.course_code, s.ID
         ) latest_session ON ci.course_code = latest_session.course_code
         ORDER BY latest_session.latest_timestamp DESC;
-    """.format(session_id)
+    """
     last_viewed_courses_df = pd.read_sql(query, con=connection, params=session_id)
     compulsory_courses = last_viewed_courses_df.to_dict('records')
     return compulsory_courses
