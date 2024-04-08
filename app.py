@@ -12,6 +12,7 @@ app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
 
 @app.route("/")
 def home():
+    data = request.form
     if 'session_id' not in session:
         session['session_id'] = secrets.token_hex(16)
     session_id = session.get('session_id')
