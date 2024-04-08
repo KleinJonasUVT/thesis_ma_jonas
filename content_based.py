@@ -162,6 +162,6 @@ def get_content_based_courses():
       courses = courses_df_rec.to_dict('records')
     return courses
 
-  similar_courses = load_similar_courses_from_db()
+  similar_courses = load_search_courses_from_db()
 
   return similar_courses
