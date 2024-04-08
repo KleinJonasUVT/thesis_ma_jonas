@@ -12,7 +12,7 @@ import pandas as pd
 # Connect to TiDB database
 connection = pymysql.connect(
     host = os.environ['TIDB_HOST'],
-    port = os.environ['TIDB_PORT'],
+    port = 4000,
     user = os.environ['TIDB_USER'],
     password = os.environ['TIDB_PASSWORD'],
     database = os.environ['TIDB_DB_NAME'],
