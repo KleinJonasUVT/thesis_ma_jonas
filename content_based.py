@@ -9,6 +9,7 @@ import nltk
 nltk.download('stopwords')
 from nltk.corpus import stopwords
 from database import load_courses_from_db, load_last_viewed_courses_from_db
+import pymysql
 
 # Connect to TiDB database
 connection = pymysql.connect(
