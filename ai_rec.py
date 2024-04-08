@@ -18,6 +18,9 @@ import pymysql
 # Set your OpenAI API key here
 openai.api_key = os.environ['OpenAi_API']
 
+# constants
+EMBEDDING_MODEL = "text-embedding-ada-002"
+
 # Connect to TiDB database
 connection = pymysql.connect(
     host = os.environ['TIDB_HOST'],
