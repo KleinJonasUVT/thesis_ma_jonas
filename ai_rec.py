@@ -223,17 +223,17 @@ def ai_search_results(query):
     def load_search_courses_from_db():
         with connection.cursor() as cursor:
             # Construct the SQL query string dynamically
-            placeholders = ', '.join(['%s'] * len(course_codes_tuple))
+            placeholders = ', '.join(['%s'] * len(similar_course_codes_tuple))
             sql = f"SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers FROM courses WHERE course_code IN ({placeholders}) ORDER BY CASE course_name "
             
             # Constructing the WHEN clauses dynamically
-            when_clauses = " ".join([f"WHEN %s THEN {index + 1}" for index in range(len(course_codes_tuple))])
+            when_clauses = " ".join([f"WHEN %s THEN {index + 1}" for index in range(len(similar_course_codes_tuple))])
             
             # Completing the SQL query string and executing the query
             sql += f"{when_clauses} END;"
             
             # Fetch the results
-            courses_df_rec = pd.read_sql(sql, connection, params=course_codes_tuple*2)
+            courses_df_rec = pd.read_sql(sql, connection, params=similar_course_codes_tuple*2)
             courses = courses_df_rec.to_dict('records')
         return courses
 
