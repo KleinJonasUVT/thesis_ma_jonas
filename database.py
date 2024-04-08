@@ -57,12 +57,12 @@ def load_last_viewed_courses_from_db(session_id):
                 s.ID,
                 MAX(s.timestamp) as latest_timestamp
             FROM sessions s
-            WHERE s.ID = :session_id
+            WHERE s.ID = {}
             GROUP BY s.course_code, s.ID
         ) latest_session ON ci.course_code = latest_session.course_code
         ORDER BY latest_session.latest_timestamp DESC;
-    """
-    last_viewed_courses_df = pd.read_sql(query, con=connection, params={"session_id": session_id})
+    """.format(session_id)
+    last_viewed_courses_df = pd.read_sql(query, con=connection)
     compulsory_courses = last_viewed_courses_df.to_dict('records')
     return compulsory_courses
 
@@ -85,13 +85,13 @@ def load_favorite_courses_from_db(session_id):
                 MAX(CASE WHEN activity = 'favorited' THEN timestamp END) AS favorited_time,
                 MAX(CASE WHEN activity = 'unfavorited' THEN timestamp END) AS unfavorited_time
             FROM sessions
-            WHERE ID = :session_id
+            WHERE ID = {}
             GROUP BY course_code
             HAVING COALESCE(favorited_time, '1900-01-01 00:00:00') > COALESCE(unfavorited_time, '1900-01-01 00:00:00')
             OR MAX(activity) = 'favorited'
         ) s
         ON ci.course_code = s.course_code;
-    """
+    """.format(session_id)
     favorite_courses_df = pd.read_sql(query, con=connection, params={"session_id": session_id})
     favorite_courses = favorite_courses_df.to_dict('records')
     return favorite_courses

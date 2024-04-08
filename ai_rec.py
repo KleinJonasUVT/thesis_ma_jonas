@@ -17,30 +17,26 @@ from flask import session
 # Set your OpenAI API key here
 openai.api_key = os.environ['OpenAi_API']
 
-# constants
-EMBEDDING_MODEL = "text-embedding-ada-002"
-
-# Database connection setup
-db_connection_string = os.environ['DB_CONNECTION_STRING']
-
-engine = create_engine(
-    db_connection_string,
-    connect_args={
-        "ssl": {
-            "ssl_ca": "/etc/ssl/cert.pem"
-        }
-    }
-)
+# Connect to TiDB database
+connection = pymysql.connect(
+    host = os.environ['TIDB_HOST'],
+    port = 4000,
+    user = os.environ['TIDB_USER'],
+    password = os.environ['TIDB_PASSWORD'],
+    database = os.environ['TIDB_DB_NAME'],
+    ssl_verify_cert = True,
+    ssl_verify_identity = True,
+    ssl_ca = '/etc/ssl/certs/ca-certificates.crt'
+    )
 
 courses_dict = load_courses_from_db()
 courses_df = pd.DataFrame(courses_dict)
 
-# Use the SQLAlchemy engine to execute the query and retrieve the data
-with engine.connect() as conn:
-    result_1 = conn.execute(text("SELECT embedding FROM courses LIMIT 427"))
+# Load the embeddings from the database
+result_1 = pd.read_sql("SELECT embedding FROM courses LIMIT 427", con=connection)
 
-    # Convert the result to a list of embedding strings
-    embedding_strings_1 = [row[0] for row in result_1]
+# Convert the 'embedding' column of the DataFrame to a list of embedding strings
+embedding_strings_1 = result_1['embedding'].tolist()
 
 # Convert the embedding strings to lists of floats
 embeddings_list_of_lists = []
@@ -49,33 +45,30 @@ for embedding_str in embedding_strings_1:
     embedding_values_1 = [float(value) for value in embedding_str.split()]
     embeddings_list_of_lists.append(embedding_values_1)
 
-with engine.connect() as conn:
-    result_2 = conn.execute(text("SELECT embedding FROM courses LIMIT 427, 427"))
+result_2 = pd.read_sql("SELECT embedding FROM courses LIMIT 427, 427", con=connection)
 
-    # Convert the result to a list of embedding strings
-    embedding_strings_2 = [row[0] for row in result_2]
+# Convert the 'embedding' column of the DataFrame to a list of embedding strings
+embedding_strings_2 = result_2['embedding'].tolist()
 
 for embedding_str in embedding_strings_2:
     # Assuming the embeddings are stored as space-separated values in the 'embedding' column
     embedding_values_2 = [float(value) for value in embedding_str.split()]
     embeddings_list_of_lists.append(embedding_values_2)
 
-with engine.connect() as conn:
-    result_3 = conn.execute(text("SELECT embedding FROM courses LIMIT 854, 427"))
+result_3 = pd.read_sql("SELECT embedding FROM courses LIMIT 854, 427", con=connection)
 
-    # Convert the result to a list of embedding strings
-    embedding_strings_3 = [row[0] for row in result_3]
+# Convert the 'embedding' column of the DataFrame to a list of embedding strings
+embedding_strings_3 = result_3['embedding'].tolist()
 
 for embedding_str in embedding_strings_3:
     # Assuming the embeddings are stored as space-separated values in the 'embedding' column
     embedding_values_3 = [float(value) for value in embedding_str.split()]
     embeddings_list_of_lists.append(embedding_values_3)
 
-with engine.connect() as conn:
-    result_4 = conn.execute(text("SELECT embedding FROM courses LIMIT 1281, 427"))
+result_4 = pd.read_sql("SELECT embedding FROM courses LIMIT 1281, 427", con=connection)
 
-    # Convert the result to a list of embedding strings
-    embedding_strings_4 = [row[0] for row in result_4]
+# Convert the 'embedding' column of the DataFrame to a list of embedding strings
+embedding_strings_4 = result_4['embedding'].tolist()
 
 for embedding_str in embedding_strings_4:
     # Assuming the embeddings are stored as space-separated values in the 'embedding' column
@@ -99,24 +92,23 @@ def print_recommendations_from_strings():
     embeddings = [emb for emb in embeddings if len(emb) > 0]
     course_codes = [course_codes[i] for i in valid_indices]
 
-    with engine.connect() as conn:
-        query = text("""
-            SELECT `course_code`
-            FROM `sessions`
-            WHERE `ID` = :session_id
-                AND (`activity` = 'clicked' OR `activity` = 'favorited')
-            ORDER BY `timestamp` DESC
-            LIMIT 1;
-        """)
+    sql_query = """
+        SELECT `course_code`
+        FROM `sessions`
+        WHERE `ID` = {}
+            AND (`activity` = 'clicked' OR `activity` = 'favorited')
+        ORDER BY `timestamp` DESC
+        LIMIT 1;
+    """.format(session_id)
 
-        result = conn.execute(query, {"session_id":session_id})
-        row = result.fetchone()
+    # Use pd.read_sql() to execute the query and retrieve data into a DataFrame
+    courses_df = pd.read_sql(sql_query, con=connection)
 
-    if row is None:
+    if courses_df.empty:
         # Handle the case where no data was found
         return []
 
-    starting_course_1 = row[0]
+    starting_course_1 = courses_df['course_code'][0]
 
     index_of_source_string_1 = courses_df[courses_df["course_code"] == starting_course_1].index[0]
 
@@ -196,24 +188,20 @@ def print_recommendations_from_strings():
     course_codes_tuple = tuple(course_codes_of_nearest_neighbors)
 
     def load_similar_courses_from_db():
-        with engine.connect() as conn:
-            query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_code IN :similar_course_codes ORDER BY CASE"
-    
-            for i, code in enumerate(course_codes_of_nearest_neighbors, start=1):
-                query += f" WHEN :code{i} THEN {i}"
-                    
-            query += " END"
-                    
-            # Execute the dynamically generated query
-            query_params = {'similar_course_codes': course_codes_tuple}
-            query_params.update({f'code{i}': code for i, code in enumerate(course_codes_of_nearest_neighbors, start=1)})
-                    
-            result = conn.execute(text(query), query_params)
-            courses = []
-            columns = result.keys()
-            for row in result:
-                result_dict = {column: value for column, value in zip(columns, row)}
-                courses.append(result_dict)
+        with connection.cursor() as cursor:
+            # Construct the SQL query string dynamically
+            placeholders = ', '.join(['%s'] * len(course_codes_tuple))
+            sql = f"SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers FROM courses WHERE course_code IN ({placeholders}) ORDER BY CASE course_name "
+            
+            # Constructing the WHEN clauses dynamically
+            when_clauses = " ".join([f"WHEN %s THEN {index + 1}" for index in range(len(course_codes_tuple))])
+            
+            # Completing the SQL query string and executing the query
+            sql += f"{when_clauses} END;"
+            
+            # Fetch the results
+            courses_df = pd.read_sql(sql, connection, params=course_codes_tuple*2)
+            courses = courses_df.to_dict('records')
             return courses
 
     similar_courses = load_similar_courses_from_db()
@@ -236,25 +224,21 @@ def ai_search_results(query):
     similar_course_codes_tuple = tuple(similar_course_codes)
 
     def load_search_courses_from_db():
-            with engine.connect() as conn:
-                query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_code IN :similar_course_codes ORDER BY CASE"
-        
-                for i, code in enumerate(similar_course_codes, start=1):
-                    query += f" WHEN :code{i} THEN {i}"
-                
-                query += " END"
-                
-                # Execute the dynamically generated query
-                query_params = {'similar_course_codes': similar_course_codes_tuple}
-                query_params.update({f'code{i}': code for i, code in enumerate(similar_course_codes, start=1)})
-                
-                result = conn.execute(text(query), query_params)
-                courses = []
-                columns = result.keys()
-                for row in result:
-                    result_dict = {column: value for column, value in zip(columns, row)}
-                    courses.append(result_dict)
-                return courses
+        with connection.cursor() as cursor:
+            # Construct the SQL query string dynamically
+            placeholders = ', '.join(['%s'] * len(course_codes_tuple))
+            sql = f"SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers FROM courses WHERE course_code IN ({placeholders}) ORDER BY CASE course_name "
+            
+            # Constructing the WHEN clauses dynamically
+            when_clauses = " ".join([f"WHEN %s THEN {index + 1}" for index in range(len(course_codes_tuple))])
+            
+            # Completing the SQL query string and executing the query
+            sql += f"{when_clauses} END;"
+            
+            # Fetch the results
+            courses_df = pd.read_sql(sql, connection, params=course_codes_tuple*2)
+            courses = courses_df.to_dict('records')
+            return courses
 
     similar_courses = load_search_courses_from_db()
     return similar_courses
