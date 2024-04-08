@@ -18,7 +18,7 @@ connection = pymysql.connect(
     database = os.environ['TIDB_DB_NAME'],
     ssl_verify_cert = True,
     ssl_verify_identity = True,
-    ssl_ca = os.environ['CA_PATH']
+    ssl_ca = '/etc/ssl/cert.pem'
     )
 
 def load_courses_from_db():
