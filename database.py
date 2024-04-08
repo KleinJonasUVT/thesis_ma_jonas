@@ -37,7 +37,8 @@ def load_random_courses_from_db():
     random_courses = random_courses_df.to_dict('records')
     return random_courses
 
-def load_last_viewed_courses_from_db(session_id):
+def load_last_viewed_courses_from_db():
+    session_id = session.get('session_id')
     query = """
         SELECT 
             ci.course_name,
@@ -66,7 +67,8 @@ def load_last_viewed_courses_from_db(session_id):
     compulsory_courses = last_viewed_courses_df.to_dict('records')
     return compulsory_courses
 
-def load_favorite_courses_from_db(session_id):
+def load_favorite_courses_from_db():
+    session_id = session.get('session_id')
     query = """
         SELECT 
             ci.course_name,
