@@ -79,14 +79,6 @@ def get_content_based_courses():
   if last_viewed_courses:
       last_viewed_course_codes = [course['course_code'] for course in last_viewed_courses]
 
-  # get embeddings for all strings
-  embeddings = embeddings_list_of_lists
-
-  # Check for empty embeddings and remove them
-  valid_indices = [i for i, emb in enumerate(embeddings) if len(emb) > 0]
-  embeddings = [emb for emb in embeddings if len(emb) > 0]
-  course_codes = [course_codes[i] for i in valid_indices]
-
   sql_query = """
       SELECT `course_code`
       FROM `sessions`
