@@ -93,17 +93,10 @@ def print_recommendations_from_strings():
     embeddings = [emb for emb in embeddings if len(emb) > 0]
     course_codes = [course_codes[i] for i in valid_indices]
 
-    sql_query = """
-        SELECT `course_code`
-        FROM `sessions`
-        WHERE `ID` = {}
-            AND (`activity` = 'clicked' OR `activity` = 'favorited')
-        ORDER BY `timestamp` DESC
-        LIMIT 1;
-    """.format(session_id)
+    sql_query = "SELECT `course_code` FROM `sessions` WHERE `ID` = %s AND (`activity` = 'clicked' OR `activity` = 'favorited') ORDER BY `timestamp` DESC LIMIT 1;"
 
     # Use pd.read_sql() to execute the query and retrieve data into a DataFrame
-    courses_df_rec = pd.read_sql(sql_query, con=connection)
+    courses_df_rec = pd.read_sql(sql_query, con=connection, params=session_id)
 
     if courses_df_rec.empty:
         # Handle the case where no data was found

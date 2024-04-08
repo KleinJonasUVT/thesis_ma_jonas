@@ -79,17 +79,10 @@ def get_content_based_courses():
   if last_viewed_courses:
       last_viewed_course_codes = [course['course_code'] for course in last_viewed_courses]
 
-  sql_query = """
-      SELECT `course_code`
-      FROM `sessions`
-      WHERE `ID` = {}
-          AND (`activity` = 'clicked' OR `activity` = 'favorited')
-      ORDER BY `timestamp` DESC
-      LIMIT 1;
-  """.format(session_id)
+  sql_query = "SELECT `course_code` FROM `sessions` WHERE `ID` = %s AND (`activity` = 'clicked' OR `activity` = 'favorited') ORDER BY `timestamp` DESC LIMIT 1;"
 
   # Use pd.read_sql() to execute the query and retrieve data into a DataFrame
-  courses_df_rec = pd.read_sql(sql_query, con=connection)
+  courses_df_rec = pd.read_sql(sql_query, con=connection, params=session_id)
 
   if courses_df_rec.empty:
       # Handle the case where no data was found
