@@ -13,6 +13,7 @@ from openai.embeddings_utils import (
 )
 from database import load_courses_from_db, load_last_viewed_courses_from_db
 from flask import session
+import pymysql
 
 # Set your OpenAI API key here
 openai.api_key = os.environ['OpenAi_API']
