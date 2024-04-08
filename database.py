@@ -27,12 +27,7 @@ def load_courses_from_db():
     return courses
 
 def load_random_courses_from_db():
-    query = """
-        SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers 
-        FROM courses
-        ORDER BY RANDOM()
-        LIMIT 9;
-    """
+    query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers FROM courses ORDER BY RAND() LIMIT 9;"
     random_courses_df = pd.read_sql(query, con=connection)
     random_courses = random_courses_df.to_dict('records')
     return random_courses
