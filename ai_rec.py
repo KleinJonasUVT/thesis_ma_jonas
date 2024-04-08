@@ -103,17 +103,17 @@ def print_recommendations_from_strings():
     """.format(session_id)
 
     # Use pd.read_sql() to execute the query and retrieve data into a DataFrame
-    courses_df = pd.read_sql(sql_query, con=connection)
+    courses_df_rec = pd.read_sql(sql_query, con=connection)
 
-    if courses_df.empty:
+    if courses_df_rec.empty:
         # Handle the case where no data was found
         return []
 
-    starting_course_1 = courses_df['course_code'][0]
+    starting_course_1 = courses_df_rec['course_code'][0]
 
-    index_of_source_string_1 = courses_df[courses_df["course_code"] == starting_course_1].index[0]
+    index_of_source_string_1 = courses_df_rec[courses_df_rec["course_code"] == starting_course_1].index[0]
 
-    last_viewed_indices = courses_df[courses_df['course_code'].isin(last_viewed_course_codes)].index
+    last_viewed_indices = courses_df_rec[courses_df_rec['course_code'].isin(last_viewed_course_codes)].index
     last_viewed_indices_set = set(last_viewed_indices)
 
     # get the embedding of the source string
@@ -201,8 +201,8 @@ def print_recommendations_from_strings():
             sql += f"{when_clauses} END;"
             
             # Fetch the results
-            courses_df = pd.read_sql(sql, connection, params=course_codes_tuple*2)
-            courses = courses_df.to_dict('records')
+            courses_df_rec = pd.read_sql(sql, connection, params=course_codes_tuple*2)
+            courses = courses_df_rec.to_dict('records')
             return courses
 
     similar_courses = load_similar_courses_from_db()
@@ -212,7 +212,7 @@ def print_recommendations_from_strings():
 def ai_search_results(query):
     query_embedding = get_embedding(query, engine=EMBEDDING_MODEL)
     course_embeddings = embeddings_list_of_lists
-    course_codes = courses_df["course_code"].tolist()
+    course_codes = courses_df_rec["course_code"].tolist()
 
     df = pd.DataFrame({'embeddings': course_embeddings})
 
@@ -237,8 +237,8 @@ def ai_search_results(query):
             sql += f"{when_clauses} END;"
             
             # Fetch the results
-            courses_df = pd.read_sql(sql, connection, params=course_codes_tuple*2)
-            courses = courses_df.to_dict('records')
+            courses_df_rec = pd.read_sql(sql, connection, params=course_codes_tuple*2)
+            courses = courses_df_rec.to_dict('records')
             return courses
 
     similar_courses = load_search_courses_from_db()
