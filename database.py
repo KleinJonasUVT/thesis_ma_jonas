@@ -118,7 +118,7 @@ def add_home_click_to_db():
   time = datetime.now(pytz.timezone('Europe/Amsterdam'))
   activity = 'home'
   course_code = 'none'
-  algorithm = data.get('algorithm_type')
+  algorithm = session.get('algorithm_type')
   place = 'home'
 
   with connection.cursor() as cursor:
