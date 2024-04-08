@@ -239,7 +239,7 @@ def ai_search_results(query):
             # Fetch the results
             courses_df_rec = pd.read_sql(sql, connection, params=course_codes_tuple*2)
             courses = courses_df_rec.to_dict('records')
-            return courses
+        return courses
 
     similar_courses = load_search_courses_from_db()
     return similar_courses

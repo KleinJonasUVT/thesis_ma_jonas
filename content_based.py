@@ -10,17 +10,17 @@ nltk.download('stopwords')
 from nltk.corpus import stopwords
 from database import load_courses_from_db, load_last_viewed_courses_from_db
 
-# Database connection setup
-db_connection_string = os.environ['DB_CONNECTION_STRING']
-
-engine = create_engine(
-    db_connection_string,
-    connect_args={
-        "ssl": {
-            "ssl_ca": "/etc/ssl/cert.pem"
-        }
-    }
-)
+# Connect to TiDB database
+connection = pymysql.connect(
+    host = os.environ['TIDB_HOST'],
+    port = 4000,
+    user = os.environ['TIDB_USER'],
+    password = os.environ['TIDB_PASSWORD'],
+    database = os.environ['TIDB_DB_NAME'],
+    ssl_verify_cert = True,
+    ssl_verify_identity = True,
+    ssl_ca = '/etc/ssl/certs/ca-certificates.crt'
+    )
 
 courses_dict = load_courses_from_db()
 courses_df = pd.DataFrame(courses_dict)
@@ -76,26 +76,33 @@ def get_content_based_courses():
   # Take course code as input and outputs most similar courses
   last_viewed_courses = load_last_viewed_courses_from_db()
   if last_viewed_courses:
-    last_viewed_course_codes = [course['course_code'] for course in last_viewed_courses]
+      last_viewed_course_codes = [course['course_code'] for course in last_viewed_courses]
 
-  with engine.connect() as conn:
-      query = text("""
-          SELECT `course_code`
-          FROM `sessions`
-          WHERE `ID` = :session_id
-              AND (`activity` = 'clicked' OR `activity` = 'favorited')
-          ORDER BY `timestamp` DESC
-          LIMIT 1;
-      """)
+  # get embeddings for all strings
+  embeddings = embeddings_list_of_lists
 
-      result = conn.execute(query, {"session_id":session_id})
-      row = result.fetchone()
+  # Check for empty embeddings and remove them
+  valid_indices = [i for i, emb in enumerate(embeddings) if len(emb) > 0]
+  embeddings = [emb for emb in embeddings if len(emb) > 0]
+  course_codes = [course_codes[i] for i in valid_indices]
 
-  if row is None:
+  sql_query = """
+      SELECT `course_code`
+      FROM `sessions`
+      WHERE `ID` = {}
+          AND (`activity` = 'clicked' OR `activity` = 'favorited')
+      ORDER BY `timestamp` DESC
+      LIMIT 1;
+  """.format(session_id)
+
+  # Use pd.read_sql() to execute the query and retrieve data into a DataFrame
+  courses_df_rec = pd.read_sql(sql_query, con=connection)
+
+  if courses_df_rec.empty:
       # Handle the case where no data was found
       return []
 
-  starting_course_1 = row[0]
+  starting_course_1 = courses_df_rec['course_code'][0]
 
   similar_course_codes_1 = similar_courses_dict[starting_course_1]
   similar_course_codes_1 = [course for course in similar_course_codes_1 if course not in last_viewed_course_codes]
@@ -152,26 +159,22 @@ def get_content_based_courses():
   similar_course_codes = similar_course_codes_1 #+ similar_course_codes_2
   course_codes_tuple = tuple(similar_course_codes)
 
-  def load_similar_courses_from_db():
-    with engine.connect() as conn:
-        query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, school, tests, block, lecturers FROM courses WHERE course_code IN :similar_course_codes ORDER BY CASE"
-        
-        for i, code in enumerate(similar_course_codes, start=1):
-            query += f" WHEN :code{i} THEN {i}"
-                
-        query += " END"
-                
-        # Execute the dynamically generated query
-        query_params = {'similar_course_codes': course_codes_tuple}
-        query_params.update({f'code{i}': code for i, code in enumerate(similar_course_codes, start=1)})
-                
-        result = conn.execute(text(query), query_params)
-        courses = []
-        columns = result.keys()
-        for row in result:
-            result_dict = {column: value for column, value in zip(columns, row)}
-            courses.append(result_dict)
-        return courses
+  def load_search_courses_from_db():
+    with connection.cursor() as cursor:
+      # Construct the SQL query string dynamically
+      placeholders = ', '.join(['%s'] * len(course_codes_tuple))
+      sql = f"SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers FROM courses WHERE course_code IN ({placeholders}) ORDER BY CASE course_name "
+      
+      # Constructing the WHEN clauses dynamically
+      when_clauses = " ".join([f"WHEN %s THEN {index + 1}" for index in range(len(course_codes_tuple))])
+      
+      # Completing the SQL query string and executing the query
+      sql += f"{when_clauses} END;"
+      
+      # Fetch the results
+      courses_df_rec = pd.read_sql(sql, connection, params=course_codes_tuple*2)
+      courses = courses_df_rec.to_dict('records')
+    return courses
 
   similar_courses = load_similar_courses_from_db()
 
