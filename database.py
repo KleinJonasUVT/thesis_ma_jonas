@@ -106,6 +106,7 @@ def add_click_to_db(session_id, course_code, data):
           """
       cursor.execute(sql, (session_id, time, course_code, activity, algorithm, place))
     connection.commit()
+    connection.close()
 
 
 def add_home_click_to_db():
@@ -123,6 +124,7 @@ def add_home_click_to_db():
             """
         cursor.execute(sql, (session_id, time, course_code, activity, algorithm, place))
   connection.commit()
+  connection.close()
 
 def add_random_favorite_to_db(course_code):
   session_id = session.get("session_id")
@@ -138,6 +140,7 @@ def add_random_favorite_to_db(course_code):
             """
         cursor.execute(sql, (session_id, time, course_code, activity, algorithm, place))
   connection.commit()
+  connection.close()
 
 def add_last_viewed_favorite_to_db(course_code):
   session_id = session.get("session_id")
@@ -153,6 +156,7 @@ def add_last_viewed_favorite_to_db(course_code):
             """
         cursor.execute(sql, (session_id, time, course_code, activity, algorithm, place))
   connection.commit()
+  connection.close()
 
 def search_courses_from_db(query):
   with connection.cursor() as cursor:
