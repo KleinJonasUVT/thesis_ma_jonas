@@ -43,7 +43,7 @@ def connect_to_db():
         database = "course_catalogue",
         ssl_verify_cert = True,
         ssl_verify_identity = True,
-        ssl_ca = "/etc/ssl/cert.pem"
+        ssl_ca = "/etc/ssl/certs/ca-certificates.crt"
         )
     return connection
 
