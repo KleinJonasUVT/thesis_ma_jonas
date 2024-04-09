@@ -73,6 +73,7 @@ for course_code in cosine_sim_df.columns:
     similar_courses_dict[course_code] = top_similar_courses
 
 def get_content_based_courses():
+  connection.ping(reconnect=True)
   session_id = session.get('session_id')
   # Take course code as input and outputs most similar courses
   last_viewed_courses = load_last_viewed_courses_from_db()
@@ -146,6 +147,7 @@ def get_content_based_courses():
   course_codes_tuple = tuple(similar_course_codes)
 
   def load_search_courses_from_db():
+    connection.ping(reconnect=True)
     with connection.cursor() as cursor:
       # Construct the SQL query string dynamically
       placeholders = ', '.join(['%s'] * len(course_codes_tuple))

@@ -22,17 +22,20 @@ connection = pymysql.connect(
     )
 
 def load_courses_from_db():
+    connection.ping(reconnect=True)
     courses_df = pd.read_sql("SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers FROM courses", con=connection)
     courses = courses_df.to_dict('records')
     return courses
 
 def load_random_courses_from_db():
+    connection.ping(reconnect=True)
     query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers FROM courses ORDER BY RAND() LIMIT 9;"
     random_courses_df = pd.read_sql(query, con=connection)
     random_courses = random_courses_df.to_dict('records')
     return random_courses
 
 def load_last_viewed_courses_from_db():
+    connection.ping(reconnect=True)
     session_id = session.get('session_id')
     query = """
         SELECT 
@@ -63,6 +66,7 @@ def load_last_viewed_courses_from_db():
     return compulsory_courses
 
 def load_favorite_courses_from_db():
+    connection.ping(reconnect=True)
     session_id = session.get('session_id')
     query = """
         SELECT 
@@ -94,6 +98,7 @@ def load_favorite_courses_from_db():
     return favorite_courses
 
 def add_click_to_db(session_id, course_code, data):
+    connection.ping(reconnect=True)
     time = datetime.now(pytz.timezone('Europe/Amsterdam'))
     activity = data.get('activity')
     algorithm = data.get('algorithm')
@@ -110,69 +115,73 @@ def add_click_to_db(session_id, course_code, data):
 
 
 def add_home_click_to_db():
-  session_id = session.get("session_id")
-  time = datetime.now(pytz.timezone('Europe/Amsterdam'))
-  activity = 'home'
-  course_code = 'none'
-  algorithm = session.get('algorithm_type')
-  place = 'home'
+    connection.ping(reconnect=True)
+    session_id = session.get("session_id")
+    time = datetime.now(pytz.timezone('Europe/Amsterdam'))
+    activity = 'home'
+    course_code = 'none'
+    algorithm = session.get('algorithm_type')
+    place = 'home'
 
-  with connection.cursor() as cursor:
-        sql = """
-            INSERT INTO sessions (ID, timestamp, course_code, activity, algorithm, place)
-            VALUES (%s, %s, %s, %s, %s, %s);
-            """
-        cursor.execute(sql, (session_id, time, course_code, activity, algorithm, place))
-  connection.commit()
-  connection.close()
+    with connection.cursor() as cursor:
+            sql = """
+                INSERT INTO sessions (ID, timestamp, course_code, activity, algorithm, place)
+                VALUES (%s, %s, %s, %s, %s, %s);
+                """
+            cursor.execute(sql, (session_id, time, course_code, activity, algorithm, place))
+    connection.commit()
+    connection.close()
 
 def add_random_favorite_to_db(course_code):
-  session_id = session.get("session_id")
-  time = datetime.now(pytz.timezone('Europe/Amsterdam'))
-  algorithm = 'random'
-  activity = 'favorited'
-  place = 'random'
+    connection.ping(reconnect=True)
+    session_id = session.get("session_id")
+    time = datetime.now(pytz.timezone('Europe/Amsterdam'))
+    algorithm = 'random'
+    activity = 'favorited'
+    place = 'random'
 
-  with connection.cursor() as cursor:
-        sql = """
-            INSERT INTO sessions (ID, timestamp, course_code, activity, algorithm, place)
-            VALUES (%s, %s, %s, %s, %s, %s);
-            """
-        cursor.execute(sql, (session_id, time, course_code, activity, algorithm, place))
-  connection.commit()
-  connection.close()
+    with connection.cursor() as cursor:
+            sql = """
+                INSERT INTO sessions (ID, timestamp, course_code, activity, algorithm, place)
+                VALUES (%s, %s, %s, %s, %s, %s);
+                """
+            cursor.execute(sql, (session_id, time, course_code, activity, algorithm, place))
+    connection.commit()
+    connection.close()
 
 def add_last_viewed_favorite_to_db(course_code):
-  session_id = session.get("session_id")
-  time = datetime.now(pytz.timezone('Europe/Amsterdam'))
-  algorithm = 'last_viewed'
-  activity = 'favorited'
-  place = 'last_viewed'
+    connection.ping(reconnect=True)
+    session_id = session.get("session_id")
+    time = datetime.now(pytz.timezone('Europe/Amsterdam'))
+    algorithm = 'last_viewed'
+    activity = 'favorited'
+    place = 'last_viewed'
 
-  with connection.cursor() as cursor:
-        sql = """
-            INSERT INTO sessions (ID, timestamp, course_code, activity, algorithm, place)
-            VALUES (%s, %s, %s, %s, %s, %s);
-            """
-        cursor.execute(sql, (session_id, time, course_code, activity, algorithm, place))
-  connection.commit()
-  connection.close()
+    with connection.cursor() as cursor:
+            sql = """
+                INSERT INTO sessions (ID, timestamp, course_code, activity, algorithm, place)
+                VALUES (%s, %s, %s, %s, %s, %s);
+                """
+            cursor.execute(sql, (session_id, time, course_code, activity, algorithm, place))
+    connection.commit()
+    connection.close()
 
 def search_courses_from_db(query):
-  with connection.cursor() as cursor:
-    cursor.execute(
-        """
-        SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers 
-        FROM courses 
-        WHERE course_name LIKE %s 
-        OR course_code LIKE %s 
-        OR aims LIKE %s 
-        OR content LIKE %s 
-        OR lecturers LIKE %s 
-        LIMIT 6;
-        """,
-        ("%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%")
-    )
-    columns = [col[0] for col in cursor.description]
-    courses = [dict(zip(columns, row)) for row in cursor.fetchall()]
-    return courses
+    connection.ping(reconnect=True)
+    with connection.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers 
+            FROM courses 
+            WHERE course_name LIKE %s 
+            OR course_code LIKE %s 
+            OR aims LIKE %s 
+            OR content LIKE %s 
+            OR lecturers LIKE %s 
+            LIMIT 6;
+            """,
+            ("%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%")
+        )
+        columns = [col[0] for col in cursor.description]
+        courses = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        return courses

@@ -81,6 +81,7 @@ for embedding_str in embedding_strings_4:
 
 
 def print_recommendations_from_strings():
+    connection.ping(reconnect=True)
     session_id = session.get('session_id')
     course_codes = courses_df["course_code"].tolist()
 
@@ -185,6 +186,7 @@ def print_recommendations_from_strings():
     course_codes_tuple = tuple(course_codes_of_nearest_neighbors)
 
     def load_similar_courses_from_db():
+        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
             # Construct the SQL query string dynamically
             placeholders = ', '.join(['%s'] * len(course_codes_tuple))
@@ -221,6 +223,7 @@ def ai_search_results(query):
     similar_course_codes_tuple = tuple(similar_course_codes)
 
     def load_search_courses_from_db():
+        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
             # Construct the SQL query string dynamically
             placeholders = ', '.join(['%s'] * len(similar_course_codes_tuple))
