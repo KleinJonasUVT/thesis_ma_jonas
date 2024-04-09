@@ -9,33 +9,35 @@ import pytz
 import pymysql
 import pandas as pd
 
-# Connect to TiDB database
-connection = pymysql.connect(
-    host = os.environ['TIDB_HOST'],
-    port = 4000,
-    user = os.environ['TIDB_USER'],
-    password = os.environ['TIDB_PASSWORD'],
-    database = os.environ['TIDB_DB_NAME'],
-    ssl_verify_cert = True,
-    ssl_verify_identity = True,
-    ssl_ca = '/etc/ssl/certs/ca-certificates.crt'
-    )
+# Connect to TiDB database function
+def connect_to_db():
+    connection = pymysql.connect(
+        host = "gateway01.eu-central-1.prod.aws.tidbcloud.com",
+        port = 4000,
+        user = "2CfnZX3eakH9fXm.root",
+        password = "KjLMaBg1uNZ0h8BP",
+        database = "course_catalogue",
+        ssl_verify_cert = True,
+        ssl_verify_identity = True,
+        ssl_ca = "/etc/ssl/cert.pem"
+        )
+    return connection
 
 def load_courses_from_db():
-    connection.ping(reconnect=True)
+    connection = connect_to_db()
     courses_df = pd.read_sql("SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers FROM courses", con=connection)
     courses = courses_df.to_dict('records')
     return courses
 
 def load_random_courses_from_db():
-    connection.ping(reconnect=True)
+    connection = connect_to_db()
     query = "SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers FROM courses ORDER BY RAND() LIMIT 9;"
     random_courses_df = pd.read_sql(query, con=connection)
     random_courses = random_courses_df.to_dict('records')
     return random_courses
 
 def load_last_viewed_courses_from_db():
-    connection.ping(reconnect=True)
+    connection = connect_to_db()
     session_id = session.get('session_id')
     query = """
         SELECT 
@@ -66,7 +68,7 @@ def load_last_viewed_courses_from_db():
     return compulsory_courses
 
 def load_favorite_courses_from_db():
-    connection.ping(reconnect=True)
+    connection = connect_to_db()
     session_id = session.get('session_id')
     query = """
         SELECT 
@@ -98,7 +100,7 @@ def load_favorite_courses_from_db():
     return favorite_courses
 
 def add_click_to_db(session_id, course_code, data):
-    connection.ping(reconnect=True)
+    connection = connect_to_db()
     time = datetime.now(pytz.timezone('Europe/Amsterdam'))
     activity = data.get('activity')
     algorithm = data.get('algorithm')
@@ -115,7 +117,7 @@ def add_click_to_db(session_id, course_code, data):
 
 
 def add_home_click_to_db():
-    connection.ping(reconnect=True)
+    connection = connect_to_db()
     session_id = session.get("session_id")
     time = datetime.now(pytz.timezone('Europe/Amsterdam'))
     activity = 'home'
@@ -133,7 +135,7 @@ def add_home_click_to_db():
     connection.close()
 
 def add_random_favorite_to_db(course_code):
-    connection.ping(reconnect=True)
+    connection = connect_to_db()
     session_id = session.get("session_id")
     time = datetime.now(pytz.timezone('Europe/Amsterdam'))
     algorithm = 'random'
@@ -150,7 +152,7 @@ def add_random_favorite_to_db(course_code):
     connection.close()
 
 def add_last_viewed_favorite_to_db(course_code):
-    connection.ping(reconnect=True)
+    connection = connect_to_db()
     session_id = session.get("session_id")
     time = datetime.now(pytz.timezone('Europe/Amsterdam'))
     algorithm = 'last_viewed'
@@ -167,7 +169,7 @@ def add_last_viewed_favorite_to_db(course_code):
     connection.close()
 
 def search_courses_from_db(query):
-    connection.ping(reconnect=True)
+    connection = connect_to_db()
     with connection.cursor() as cursor:
         cursor.execute(
             """

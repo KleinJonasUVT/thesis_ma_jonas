@@ -11,17 +11,19 @@ from nltk.corpus import stopwords
 from database import load_courses_from_db, load_last_viewed_courses_from_db
 import pymysql
 
-# Connect to TiDB database
-connection = pymysql.connect(
-    host = os.environ['TIDB_HOST'],
-    port = 4000,
-    user = os.environ['TIDB_USER'],
-    password = os.environ['TIDB_PASSWORD'],
-    database = os.environ['TIDB_DB_NAME'],
-    ssl_verify_cert = True,
-    ssl_verify_identity = True,
-    ssl_ca = '/etc/ssl/certs/ca-certificates.crt'
-    )
+# Connect to TiDB database function
+def connect_to_db():
+    connection = pymysql.connect(
+        host = "gateway01.eu-central-1.prod.aws.tidbcloud.com",
+        port = 4000,
+        user = "2CfnZX3eakH9fXm.root",
+        password = "KjLMaBg1uNZ0h8BP",
+        database = "course_catalogue",
+        ssl_verify_cert = True,
+        ssl_verify_identity = True,
+        ssl_ca = "/etc/ssl/cert.pem"
+        )
+    return connection
 
 courses_dict = load_courses_from_db()
 courses_df = pd.DataFrame(courses_dict)
@@ -73,7 +75,7 @@ for course_code in cosine_sim_df.columns:
     similar_courses_dict[course_code] = top_similar_courses
 
 def get_content_based_courses():
-  connection.ping(reconnect=True)
+  connection = connect_to_db()
   session_id = session.get('session_id')
   # Take course code as input and outputs most similar courses
   last_viewed_courses = load_last_viewed_courses_from_db()
@@ -147,7 +149,6 @@ def get_content_based_courses():
   course_codes_tuple = tuple(similar_course_codes)
 
   def load_search_courses_from_db():
-    connection.ping(reconnect=True)
     with connection.cursor() as cursor:
       # Construct the SQL query string dynamically
       placeholders = ', '.join(['%s'] * len(course_codes_tuple))

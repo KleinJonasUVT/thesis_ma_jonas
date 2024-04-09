@@ -33,6 +33,20 @@ connection = pymysql.connect(
     ssl_ca = '/etc/ssl/certs/ca-certificates.crt'
     )
 
+# Connect to TiDB database function
+def connect_to_db():
+    connection = pymysql.connect(
+        host = "gateway01.eu-central-1.prod.aws.tidbcloud.com",
+        port = 4000,
+        user = "2CfnZX3eakH9fXm.root",
+        password = "KjLMaBg1uNZ0h8BP",
+        database = "course_catalogue",
+        ssl_verify_cert = True,
+        ssl_verify_identity = True,
+        ssl_ca = "/etc/ssl/cert.pem"
+        )
+    return connection
+
 courses_dict = load_courses_from_db()
 courses_df = pd.DataFrame(courses_dict)
 
@@ -81,7 +95,7 @@ for embedding_str in embedding_strings_4:
 
 
 def print_recommendations_from_strings():
-    connection.ping(reconnect=True)
+    connection = connect_to_db()
     session_id = session.get('session_id')
     course_codes = courses_df["course_code"].tolist()
 
@@ -186,7 +200,6 @@ def print_recommendations_from_strings():
     course_codes_tuple = tuple(course_codes_of_nearest_neighbors)
 
     def load_similar_courses_from_db():
-        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
             # Construct the SQL query string dynamically
             placeholders = ', '.join(['%s'] * len(course_codes_tuple))
@@ -223,7 +236,6 @@ def ai_search_results(query):
     similar_course_codes_tuple = tuple(similar_course_codes)
 
     def load_search_courses_from_db():
-        connection.ping(reconnect=True)
         with connection.cursor() as cursor:
             # Construct the SQL query string dynamically
             placeholders = ', '.join(['%s'] * len(similar_course_codes_tuple))
