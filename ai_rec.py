@@ -221,6 +221,7 @@ def print_recommendations_from_strings():
     return similar_courses
 
 def ai_search_results(query):
+    connection = connect_to_db()
     query_embedding = get_embedding(query, engine=EMBEDDING_MODEL)
     course_embeddings = embeddings_list_of_lists
     course_codes = courses_df["course_code"].tolist()
