@@ -14,8 +14,8 @@ def connect_to_db():
     connection = pymysql.connect(
         host = "gateway01.eu-central-1.prod.aws.tidbcloud.com",
         port = 4000,
-        user = os.environ("TIDB_USER"),
-        password = os.environ("TIDB_PASSWORD"),
+        user = os.environ["TIDB_USER"],
+        password = os.environ["TIDB_PASSWORD"],
         database = "course_catalogue",
         ssl_verify_cert = True,
         ssl_verify_identity = True,
