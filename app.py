@@ -6,6 +6,7 @@ from ai_rec import print_recommendations_from_strings, ai_search_results
 from content_based import get_content_based_courses
 import random
 import httpagentparser
+import os
 
 app = Flask(__name__)
 app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
@@ -189,4 +190,4 @@ def submit():
     return render_template('submit.html')
 
 if __name__ == "__main__":
-  app.run(host='0.0.0.0', debug=True)
+  app.run(host='0.0.0.0', debug=os.environ["DEBUG"])

@@ -166,3 +166,8 @@ pyproject.toml
 .replit
 replit.nix
 .pythonlibs
+
+# secret files
+secrets/
+deployment/envs.yaml
+deployment/bearer-token.txt

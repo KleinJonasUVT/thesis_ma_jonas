@@ -12,9 +12,12 @@ WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc libpq-dev \
+    && apt-get install -y --no-install-recommends gcc libpq-dev default-libmysqlclient-dev pkg-config \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Copy the cert files for MySQL DB
+COPY secrets/cert.pem /app/cert.pem
 
 # Install Python dependencies
 COPY requirements.txt /app/
@@ -24,5 +27,8 @@ RUN pip install --upgrade pip \
 # Copy the current directory contents into the container at /app
 COPY . /app/
 
-# Specify the command to run on container start
-CMD ["python", "app.py"]
+# Make port 80 available to the world outside this container
+EXPOSE 80
+
+# Run gunicorn when the container launches
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:app"]

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: coursecatalogue
+spec:
+  containers:
+    - name: coursecatalogue
+      image: coursecatalogue.azurecr.io/tai-coursecatalogue:0.0.1
+      resources:
+        requests:
+          cpu: "750m"
+          memory: "1500Mi"
+        limits:
+          cpu: "1250m"
+          memory: "2000Mi"
+      envFrom:
+      - configMapRef:
+          name: envs
+      ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP

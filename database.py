@@ -19,7 +19,7 @@ def connect_to_db():
         database = os.environ['TIDB_DB_NAME'],
         ssl_verify_cert = True,
         ssl_verify_identity = True,
-        ssl_ca = '/etc/ssl/certs/ca-certificates.crt'
+        ssl_ca = os.environ["SSL_CERT_PATH"]
         )
     return connection
 
