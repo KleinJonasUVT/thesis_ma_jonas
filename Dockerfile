@@ -23,6 +23,7 @@ COPY secrets/cert.pem /app/cert.pem
 COPY requirements.txt /app/
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt
+RUN python -c "import nltk; nltk.download('stopwords')"
 
 # Copy the current directory contents into the container at /app
 COPY . /app/
@@ -31,4 +32,4 @@ COPY . /app/
 EXPOSE 80
 
 # Run gunicorn when the container launches
-CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "--timeout", "90", "app:app"]

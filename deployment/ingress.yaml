@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: coursecatalogue-ingress
+spec:
+  selector:
+    app: coursecatalogue  # This should match the label of your Flask app pod
+  ports:
+    - protocol: TCP
+      port: 80       # Port accessible outside the cluster
+      targetPort: 80  # Port your Flask app is listening on inside the pod
+  type: LoadBalancer
