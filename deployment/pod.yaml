@@ -10,11 +10,11 @@ spec:
       image: coursecatalogue.azurecr.io/tai-coursecatalogue:0.0.1
       resources:
         requests:
-          cpu: "500m"
-          memory: "400Mi"
+          cpu: "400m"
+          memory: "500Mi"
         limits:
-          cpu: "1000m"
-          memory: "800Mi"
+          cpu: "750m"
+          memory: "1Gi"
       envFrom:
       - configMapRef:
           name: envs

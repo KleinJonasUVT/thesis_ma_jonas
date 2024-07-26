@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: letsencrypt-prod
+spec:
+  secretName: letsencrypt-prod-cert
+  issuerRef:
+    name: letsencrypt-prod-issuer
+    kind: ClusterIssuer
+  commonName: coursecatalogue.tilburgai.nl
+  dnsNames:
+  - coursecatalogue.tilburgai.nl
