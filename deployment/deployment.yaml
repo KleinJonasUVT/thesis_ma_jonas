@@ -26,7 +26,7 @@ spec:
             cpu: "750m"
             memory: "1Gi"
         envFrom:
-        - configMapRef:
+        - secretRef:
             name: envs
         ports:
           - containerPort: 80
