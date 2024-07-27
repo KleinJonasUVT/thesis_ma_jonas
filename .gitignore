@@ -176,3 +176,4 @@ deployment/bearer-token.txt
 *.exe
 *.tfstate*
 *.hcl
+*.terraform*
