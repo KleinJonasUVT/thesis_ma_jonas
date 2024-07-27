@@ -171,3 +171,8 @@ replit.nix
 secrets/
 deployment/envs.yaml
 deployment/bearer-token.txt
+
+# terraform
+*.exe
+*.tfstate*
+*.hcl
