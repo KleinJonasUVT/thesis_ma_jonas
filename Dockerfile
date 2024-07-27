@@ -17,6 +17,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the cert files for MySQL DB
+# TODO: Use kubernetes secrets instead
 COPY secrets/cert.pem /app/cert.pem
 
 # Install Python dependencies

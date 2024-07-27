@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: coursecatalogue
-        image: coursecatalogue.azurecr.io/tai-coursecatalogue:0.0.1
+        image: coursecatalogue2.azurecr.io/tai-coursecatalogue:0.1.0
         resources:
           requests:
             cpu: "400m"
