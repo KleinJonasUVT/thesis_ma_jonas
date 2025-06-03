@@ -100,7 +100,7 @@ def favorite_courses():
 
 @app.route("/course/<course_code>/rating", methods=['POST'])
 def rating_course(course_code):
-  data = request.form
+  data = request.get_json() if request.is_json else request.form
   session_id = session.get('session_id')
   add_click_to_db(session_id, course_code, data)
   random_course_codes = session.get('random_course_codes')
@@ -123,14 +123,18 @@ def rating_course(course_code):
   if found_last_viewed:
     add_last_viewed_favorite_to_db(course_code)
 
+  if request.is_json:
+    return jsonify({"status": "ok", "favorited": True})
   previous_page = request.referrer
   return redirect(previous_page)
 
 @app.route("/course/<course_code>/remove_rating", methods=['POST'])
 def remove_rating(course_code):
-    data = request.form
+    data = request.get_json() if request.is_json else request.form
     session_id = session.get('session_id')
     add_click_to_db(session_id, course_code, data)
+    if request.is_json:
+        return jsonify({"status": "ok", "favorited": False})
     previous_page = request.referrer
     return redirect(previous_page)
 
