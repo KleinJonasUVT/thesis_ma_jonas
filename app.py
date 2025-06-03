@@ -143,15 +143,16 @@ def clicked_course(course_code):
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
-    query = request.args.get('query')  # Retrieve the query parameter from the URL
-    results_ai = ai_search_results(query)
-    session['results_ai'] = results_ai
+    query = request.args.get('query', '').strip()
 
     if query:
+        results_ai = ai_search_results(query)
         results_keyword = search_courses_from_db(query)
     else:
-        results_keyword = []  # Initialize an empty list for the initial render
+        results_ai = []
+        results_keyword = []
 
+    session['results_ai'] = results_ai
     session['results_keyword'] = results_keyword
 
     total_results = []
