@@ -1,11 +1,17 @@
 from flask import Flask, render_template, jsonify, request, redirect, session, url_for, make_response
 from datetime import datetime, timedelta
 import secrets
-from database import load_courses_from_db, load_random_courses_from_db, load_last_viewed_courses_from_db, load_favorite_courses_from_db, add_click_to_db, search_courses_from_db, add_home_click_to_db, add_random_favorite_to_db, add_last_viewed_favorite_to_db
-from ai_rec import print_recommendations_from_strings, ai_search_results
-from content_based import get_content_based_courses
-import random
-import httpagentparser
+from database import (
+    load_courses_from_db,
+    load_random_courses_from_db,
+    load_last_viewed_courses_from_db,
+    load_favorite_courses_from_db,
+    add_click_to_db,
+    add_home_click_to_db,
+    add_random_favorite_to_db,
+    add_last_viewed_favorite_to_db,
+)
+from ai_rec import recommend_courses, ai_search_results
 
 app = Flask(__name__)
 app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
@@ -16,23 +22,8 @@ def home():
         session['session_id'] = secrets.token_hex(16)
     session_id = session.get('session_id')
 
-    if 'algorithm_type' not in session or not session['algorithm_type']:
-        algorithm_type = random.choice(['openai', 'tfidf'])
-        session['algorithm_type'] = algorithm_type
-    
-    else:
-        algorithm_type = session.get('algorithm_type')
-
-    openai_courses = []
-    content_based_courses = []
-    if algorithm_type == 'openai':
-        openai_courses = print_recommendations_from_strings()
-        used_courses = openai_courses
-        num_used_courses = len(used_courses)
-    else:
-        content_based_courses = get_content_based_courses()
-        used_courses = content_based_courses
-        num_used_courses = len(used_courses)
+    used_courses = recommend_courses()
+    num_used_courses = len(used_courses)
 
     add_home_click_to_db()
     
@@ -52,7 +43,19 @@ def home():
     random_courses = [course for course in random_courses if course['course_code'] not in used_courses]
 
     # Return the template with the necessary variables
-    return render_template('home.html', num_favorite_courses=num_favorite_courses, recommendation=True, used_courses=used_courses, num_used_courses=num_used_courses, random_courses=random_courses, num_random_courses=num_random_courses, last_viewed_courses=last_viewed_courses, num_last_viewed_courses=num_last_viewed_courses, session_id=session_id, favorite_courses=favorite_courses, content_based_courses=content_based_courses, num_content_based_courses=len(content_based_courses), openai_courses=openai_courses, num_openai_courses=len(openai_courses))
+    return render_template(
+        'home.html',
+        num_favorite_courses=num_favorite_courses,
+        recommendation=True,
+        used_courses=used_courses,
+        num_used_courses=num_used_courses,
+        random_courses=random_courses,
+        num_random_courses=num_random_courses,
+        last_viewed_courses=last_viewed_courses,
+        num_last_viewed_courses=num_last_viewed_courses,
+        session_id=session_id,
+        favorite_courses=favorite_courses,
+    )
 
 @app.route('/clear_session')
 def clear_session():
@@ -66,22 +69,8 @@ def list_courses():
 
 @app.route("/course/<course_code>")
 def show_course(course_code):
-    if 'algorithm_type' not in session or not session['algorithm_type']:
-        algorithm_type = random.choice(['openai', 'tfidf'])
-        session['algorithm_type'] = algorithm_type
-    else:
-        algorithm_type = session.get('algorithm_type')
-
-    openai_courses = []
-    content_based_courses = []
-    if algorithm_type == 'openai':
-        openai_courses = print_recommendations_from_strings()
-        used_courses = openai_courses
-        num_used_courses = len(used_courses)
-    else:
-        content_based_courses = get_content_based_courses()
-        used_courses = content_based_courses
-        num_used_courses = len(used_courses)
+    used_courses = recommend_courses()
+    num_used_courses = len(used_courses)
     courses = load_courses_from_db()
     course = [course for course in courses if course.get('course_code') == course_code]
     favorite_courses = load_favorite_courses_from_db()
@@ -90,7 +79,16 @@ def show_course(course_code):
     if not course:
         return "Not Found", 404
     else:
-        return render_template('coursepage.html', num_favorite_courses=num_favorite_courses, recommendation=True, course=course[0], favorite_courses=favorite_courses, results_ai=results_ai, openai_courses=openai_courses, content_based_courses=content_based_courses, used_courses=used_courses, num_used_courses=num_used_courses)
+        return render_template(
+            'coursepage.html',
+            num_favorite_courses=num_favorite_courses,
+            recommendation=True,
+            course=course[0],
+            favorite_courses=favorite_courses,
+            results_ai=results_ai,
+            used_courses=used_courses,
+            num_used_courses=num_used_courses,
+        )
 
 @app.route('/favourites')
 def favorite_courses():
@@ -146,40 +144,16 @@ def search():
     query = request.args.get('query', '').strip()
 
     if query:
-        results_ai = ai_search_results(query)
-        results_keyword = search_courses_from_db(query)
+        total_results = ai_search_results(query)
     else:
-        results_ai = []
-        results_keyword = []
+        total_results = []
 
-    session['results_ai'] = results_ai
-    session['results_keyword'] = results_keyword
-
-    total_results = []
-
-    if random.choice([True, False]):
-        list1, list2 = results_ai, results_keyword
-    else:
-        list1, list2 = results_keyword, results_ai
-
-    # Find the length of the shorter list
-    min_length = min(len(list1), len(list2))
-
-    # Add elements alternately from both lists up to the length of the shorter list
-    for i in range(min_length):
-        total_results.append(list1[i])
-        total_results.append(list2[i])
-
-    # Append remaining elements from the longer list, if any
-    if len(list1) > min_length:
-        total_results.extend(list1[min_length:])
-    if len(list2) > min_length:
-        total_results.extend(list2[min_length:])
+    results_ai = total_results
 
     favorite_courses = load_favorite_courses_from_db()
     num_favorite_courses = len(favorite_courses)
 
-    return render_template('search.html', num_favorite_courses=num_favorite_courses, query=query, results=total_results, results_ai=results_ai, results_keyword=results_keyword, search=True)
+    return render_template('search.html', num_favorite_courses=num_favorite_courses, query=query, results=total_results, results_ai=results_ai, search=True)
 
 @app.route("/disclaimer")
 def disclaimer():
