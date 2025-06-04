@@ -2,10 +2,10 @@
 
 function setupFavoriteForms() {
   document.querySelectorAll('.favorite-form').forEach(function(form) {
-    form.addEventListener('submit', function(e) {
+    const checkbox = form.querySelector('input[type="checkbox"]');
+    if (!checkbox) return;
+    checkbox.addEventListener('change', function(e) {
       e.preventDefault();
-      const checkbox = form.querySelector('input[type="checkbox"]');
-      if (!checkbox) return;
       const courseCode = checkbox.dataset.courseCode;
       const favorited = checkbox.checked;
       const url = favorited ? `/course/${courseCode}/rating` : `/course/${courseCode}/remove_rating`;
