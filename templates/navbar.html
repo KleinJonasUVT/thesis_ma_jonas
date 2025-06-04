@@ -69,6 +69,18 @@
                 <li class="nav-item">
                     <a class="custom-text" href="/favourites"><i class="fa-solid fa-star" style="color: #000000;"></i><b>Favourites</b></a>
                 </li>
+                {% if session.get('user_id') %}
+                <li class="nav-item">
+                    <a class="custom-text" href="/profile"><i class="fa-solid fa-user" style="color: #000000;"></i><b>{{ session.get('user_name') }}</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="custom-text" href="/logout"><b>Logout</b></a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="custom-text" href="/login"><b>Login</b></a>
+                </li>
+                {% endif %}
             </ul>
               <form class="d-flex" role="search" action="/search" method="GET">
                   <input class="form-control me-2" type="text" name="query" placeholder="Search courses" required autocomplete="off">
