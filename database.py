@@ -168,22 +168,3 @@ def add_last_viewed_favorite_to_db(course_code):
     connection.commit()
     connection.close()
 
-def search_courses_from_db(query):
-    connection = connect_to_db()
-    with connection.cursor() as cursor:
-        cursor.execute(
-            """
-            SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers 
-            FROM courses 
-            WHERE course_name LIKE %s 
-            OR course_code LIKE %s 
-            OR aims LIKE %s 
-            OR content LIKE %s 
-            OR lecturers LIKE %s 
-            LIMIT 6;
-            """,
-            ("%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%", "%" + query + "%")
-        )
-        columns = [col[0] for col in cursor.description]
-        courses = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        return courses
