@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    {% include 'bootstrap.html' %}
+</head>
+<body>
+{% include 'navbar.html' %}
+<div class="container" style="max-width:500px;margin-top:60px;">
+    <div class="card p-4" style="background-color:#F2D398;border:2px solid #986B23;border-radius:10px;">
+        <h3 class="mb-3 text-center">Login</h3>
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" required>
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary custom-btn">Login</button>
+                <a class="btn btn-link" href="{{ url_for('register') }}">Register</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% include 'footer.html' %}
+</body>
+</html>

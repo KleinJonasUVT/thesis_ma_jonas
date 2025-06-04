@@ -1,6 +1,17 @@
 from flask import Flask, render_template, jsonify, request, redirect, session, url_for, make_response
 from datetime import datetime, timedelta
 import secrets
+from werkzeug.security import check_password_hash
+from user_db import (
+    init_db,
+    create_user,
+    authenticate_user,
+    get_user_by_id,
+    update_user,
+    add_favorite,
+    remove_favorite,
+    get_favorites,
+)
 from database import (
     load_courses_from_db,
     load_random_courses_from_db,
@@ -15,6 +26,7 @@ from ai_rec import recommend_courses, ai_search_results
 
 app = Flask(__name__)
 app.secret_key = 'test_with_password_bla' # Replace with a secure secret key
+init_db()
 
 @app.route("/")
 def home():
@@ -61,6 +73,64 @@ def home():
 def clear_session():
     session.clear()  # This clears the session
     return redirect(url_for('home'))
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = authenticate_user(email, password)
+        if user:
+            session['user_id'] = user['id']
+            session['user_name'] = user['name']
+            session['user_email'] = user['email']
+            return redirect(url_for('profile'))
+        error = 'Invalid credentials'
+        return render_template('login.html', error=error)
+    return render_template('login.html')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm = request.form.get('confirm')
+        if not name or not email or not password or password != confirm:
+            return render_template('register.html', error='Please fill in all fields correctly')
+        if authenticate_user(email, password):
+            return render_template('register.html', error='Email already registered')
+        create_user(name, email, password)
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    session.pop('user_name', None)
+    session.pop('user_email', None)
+    return redirect(url_for('home'))
+
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        name = request.form.get('name')
+        password = request.form.get('password')
+        update_user(user_id, name=name, password=password if password else None)
+        if name:
+            session['user_name'] = name
+    user = get_user_by_id(user_id)
+    favorites_codes = get_favorites(user_id)
+    all_courses = load_courses_from_db()
+    favorite_courses = [c for c in all_courses if c['course_code'] in favorites_codes]
+    return render_template('profile.html', user=user, favorite_courses=favorite_courses)
 
 @app.route("/api/courses")
 def list_courses():
@@ -121,6 +191,10 @@ def rating_course(course_code):
   if found_last_viewed:
     add_last_viewed_favorite_to_db(course_code)
 
+  user_id = session.get('user_id')
+  if user_id:
+    add_favorite(user_id, course_code)
+
   if request.is_json:
     return jsonify({"status": "ok", "favorited": True})
   previous_page = request.referrer
@@ -131,6 +205,9 @@ def remove_rating(course_code):
     data = request.get_json() if request.is_json else request.form
     session_id = session.get('session_id')
     add_click_to_db(session_id, course_code, data)
+    user_id = session.get('user_id')
+    if user_id:
+        remove_favorite(user_id, course_code)
     if request.is_json:
         return jsonify({"status": "ok", "favorited": False})
     previous_page = request.referrer
