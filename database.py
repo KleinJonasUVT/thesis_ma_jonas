@@ -24,6 +24,7 @@ def connect_to_db():
     return connection
 
 def load_courses_from_db():
+    print(os.environ.get('CA_PATH'))
     connection = connect_to_db()
     courses_df = pd.read_sql("SELECT course_name, course_code, language, aims, content, Degree, ECTS, tests, block, lecturers FROM courses", con=connection)
     courses = courses_df.to_dict('records')
